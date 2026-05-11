@@ -8,7 +8,7 @@ use Closure;
 
 final class Router
 {
-  /** @var array<string, array<int, array{pattern:string, handler:callable|array{string,string}|Closure}>> */
+  /** @var array<string, array<int, array{pattern:string, handler:callable|array{string,string}|Closure, middleware:array<int, mixed>}>> */
   private array $routes = [
     'GET' => [],
     'POST' => [],
@@ -18,14 +18,16 @@ final class Router
   {
   }
 
-  public function get(string $pattern, callable|array $handler): void
+  /** @param array<int, mixed> $middleware */
+  public function get(string $pattern, callable|array $handler, array $middleware = []): void
   {
-    $this->routes['GET'][] = ['pattern' => $pattern, 'handler' => $handler];
+    $this->routes['GET'][] = ['pattern' => $pattern, 'handler' => $handler, 'middleware' => $middleware];
   }
 
-  public function post(string $pattern, callable|array $handler): void
+  /** @param array<int, mixed> $middleware */
+  public function post(string $pattern, callable|array $handler, array $middleware = []): void
   {
-    $this->routes['POST'][] = ['pattern' => $pattern, 'handler' => $handler];
+    $this->routes['POST'][] = ['pattern' => $pattern, 'handler' => $handler, 'middleware' => $middleware];
   }
 
   public function dispatch(Request $request): void
@@ -47,6 +49,8 @@ final class Router
         ARRAY_FILTER_USE_KEY
       );
 
+      $this->runMiddleware($route['middleware'] ?? [], $request, $params);
+
       $handler = $route['handler'];
 
       if (is_array($handler)) {
@@ -61,5 +65,39 @@ final class Router
     }
 
     Response::abort(404, 'Page not found');
+  }
+
+  /** @param array<int, mixed> $middleware */
+  private function runMiddleware(array $middleware, Request $request, array $params): void
+  {
+    foreach ($middleware as $entry) {
+      if (is_callable($entry)) {
+        $entry($request, $params, $this->app);
+        continue;
+      }
+
+      if (!is_array($entry)) {
+        continue;
+      }
+
+      $class = $entry[0] ?? null;
+      $arguments = $entry[1] ?? [];
+
+      if (!is_string($class) || !class_exists($class)) {
+        continue;
+      }
+
+      if (!is_array($arguments)) {
+        $arguments = [$arguments];
+      }
+
+      $instance = new $class();
+
+      if (!method_exists($instance, 'handle')) {
+        continue;
+      }
+
+      $instance->handle($request, ...$arguments);
+    }
   }
 }

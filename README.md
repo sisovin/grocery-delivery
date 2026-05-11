@@ -148,6 +148,8 @@ npm run build:css
 ```bash
 php bin/console migrate
 php bin/console seed
+php bin/console seed:users
+php bin/console seed:templates
 ```
 
 6. Serve application:
@@ -157,6 +159,12 @@ php bin/console serve
 ```
 
 Open: http://127.0.0.1:8000
+
+Demo users created by `seed:users`:
+- `admin@nourish.local` (admin)
+- `customer@nourish.local` (customer)
+- `supplier@nourish.local` (supplier)
+- Default password: `Password@123` (or custom value passed to command)
 
 ## 9) Prompt API Example
 

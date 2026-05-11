@@ -7,6 +7,8 @@ const BASE_PATH = __DIR__ . '/..';
 require BASE_PATH . '/bootstrap/app.php';
 
 use App\Core\Database;
+use App\Repositories\UserRepository;
+use App\Services\TemplateProductSeeder;
 
 $command = $argv[1] ?? 'help';
 
@@ -40,6 +42,47 @@ switch ($command) {
     echo "Seeds complete." . PHP_EOL;
     break;
 
+  case 'seed:templates':
+    $paths = [
+      BASE_PATH . '/templates/01-Home-Template-20260510.html',
+      BASE_PATH . '/templates/02-Admin-Template-20260510.html',
+      BASE_PATH . '/templates/03-Customer-Template-20260510.html',
+      BASE_PATH . '/templates/04-Supplierr-Template-20260510.html',
+    ];
+
+    $report = (new TemplateProductSeeder())->seed($paths);
+    echo 'Template validation logs:' . PHP_EOL;
+
+    foreach ($report['logs'] as $entry) {
+      $status = strtoupper((string) ($entry['status'] ?? 'ok'));
+      $template = (string) ($entry['template'] ?? 'unknown-template');
+      echo "- [{$status}] {$template}" . PHP_EOL;
+      foreach (($entry['messages'] ?? []) as $message) {
+        echo "    * {$message}" . PHP_EOL;
+      }
+    }
+
+    echo 'Template parser stats: home_cards=' . (int) ($report['stats']['home_cards'] ?? 0)
+      . ', js_products=' . (int) ($report['stats']['js_products'] ?? 0) . PHP_EOL;
+
+    if (($report['failed'] ?? false) === true) {
+      echo 'Template product seeding failed. Imported ' . (int) ($report['imported'] ?? 0) . ' products.' . PHP_EOL;
+      if (!empty($report['error'])) {
+        echo 'Error: ' . (string) $report['error'] . PHP_EOL;
+      }
+      exit(1);
+    }
+
+    echo 'Template product seeding complete. Imported ' . (int) ($report['imported'] ?? 0) . ' products.' . PHP_EOL;
+    break;
+
+  case 'seed:users':
+    $password = $argv[2] ?? 'Password@123';
+    $count = (new UserRepository())->seedDefaultUsers($password);
+    echo "User seeding complete. Upserted {$count} RBAC users." . PHP_EOL;
+    echo "Default password: {$password}" . PHP_EOL;
+    break;
+
   case 'serve':
     $host = $argv[2] ?? '127.0.0.1:8000';
     echo "Serving on http://{$host}" . PHP_EOL;
@@ -50,6 +93,8 @@ switch ($command) {
     echo "Available commands:" . PHP_EOL;
     echo "  php bin/console migrate" . PHP_EOL;
     echo "  php bin/console seed" . PHP_EOL;
+    echo "  php bin/console seed:templates" . PHP_EOL;
+    echo "  php bin/console seed:users [password]" . PHP_EOL;
     echo "  php bin/console serve [host:port]" . PHP_EOL;
     break;
 }

@@ -2,23 +2,25 @@
 
 declare(strict_types=1);
 ?>
-<section class="bg-white rounded-3xl p-6 border border-emerald-100 mb-6">
-  <h1 class="text-2xl font-bold text-emerald-800 mb-2">សួស្តី! Welcome to Nourish</h1>
-  <p class="text-slate-600">Browse Farm-fresh products, get same-day delivery, and unlock free delivery on orders above
-    $20.</p>
+<section class="bg-white rounded-3xl p-6 border border-emerald-100 mb-6 grid lg:grid-cols-2 gap-5 items-center">
+  <div>
+    <h1 class="text-2xl font-bold text-emerald-800 mb-2">សួស្តី! Welcome to Nourish</h1>
+    <p class="text-slate-600">Browse Farm-fresh products, get same-day delivery, and unlock free delivery on orders
+      above
+      $20.</p>
+  </div>
+  <img class="w-full rounded-2xl border border-emerald-100"
+    src="<?= e(asset('assets/images/01-mobile-promotion.png')) ?>" alt="Nourish customer mobile ordering experience">
 </section>
 
 <section class="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-  <article class="bg-white border border-emerald-100 rounded-2xl p-5">
-    <h3 class="font-semibold text-emerald-800 mb-2">Quick Reorder</h3>
-    <p class="text-sm text-slate-600">Order last week favorites in one click.</p>
-  </article>
-  <article class="bg-white border border-emerald-100 rounded-2xl p-5">
-    <h3 class="font-semibold text-emerald-800 mb-2">Delivery Tracker</h3>
-    <p class="text-sm text-slate-600">Track driver and ETA in real time.</p>
-  </article>
-  <article class="bg-white border border-emerald-100 rounded-2xl p-5">
-    <h3 class="font-semibold text-emerald-800 mb-2">Seasonal Picks</h3>
-    <p class="text-sm text-slate-600">Discover local farms and seasonal bundles.</p>
-  </article>
+  <?php $title = 'Quick Reorder';
+  $body = 'Order last week favorites in one click.';
+  require base_path('app/Views/components/ui/info-card.php'); ?>
+  <?php $title = 'Delivery Tracker';
+  $body = 'Track driver and ETA in real time.';
+  require base_path('app/Views/components/ui/info-card.php'); ?>
+  <?php $title = 'Seasonal Picks';
+  $body = 'Discover local farms and seasonal bundles.';
+  require base_path('app/Views/components/ui/info-card.php'); ?>
 </section>
