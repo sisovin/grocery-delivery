@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+const BASE_PATH = __DIR__ . '/..';
+
+require BASE_PATH . '/bootstrap/app.php';
+
+use App\Core\Database;
+
+$command = $argv[1] ?? 'help';
+
+$runSqlDirectory = static function (string $dir): void {
+  $pdo = Database::pdo();
+  $files = glob($dir . '/*.sql');
+  if ($files === false) {
+    echo "No SQL files found in {$dir}" . PHP_EOL;
+    return;
+  }
+
+  sort($files);
+  foreach ($files as $file) {
+    $sql = file_get_contents($file);
+    if ($sql === false) {
+      continue;
+    }
+    $pdo->exec($sql);
+    echo 'Executed: ' . basename($file) . PHP_EOL;
+  }
+};
+
+switch ($command) {
+  case 'migrate':
+    $runSqlDirectory(BASE_PATH . '/database/migrations');
+    echo "Migrations complete." . PHP_EOL;
+    break;
+
+  case 'seed':
+    $runSqlDirectory(BASE_PATH . '/database/seeds');
+    echo "Seeds complete." . PHP_EOL;
+    break;
+
+  case 'serve':
+    $host = $argv[2] ?? '127.0.0.1:8000';
+    echo "Serving on http://{$host}" . PHP_EOL;
+    passthru(sprintf('php -S %s -t public', escapeshellarg($host)));
+    break;
+
+  default:
+    echo "Available commands:" . PHP_EOL;
+    echo "  php bin/console migrate" . PHP_EOL;
+    echo "  php bin/console seed" . PHP_EOL;
+    echo "  php bin/console serve [host:port]" . PHP_EOL;
+    break;
+}

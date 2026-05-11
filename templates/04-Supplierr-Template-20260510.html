@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nourish Supplier Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-dark: #1B5E20;
+      --brand-main: #4CAF50;
+      --brand-light: #E8F5E9;
+      --brand-accent: #FF8F00;
+      --bg-body: #F9FAFB;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+    }
+    body {
+      font-family: 'Noto Sans Khmer', 'Nunito Sans', system-ui, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+    }
+    .brand-text { color: var(--brand-dark); }
+    .brand-bg { background-color: var(--brand-dark); }
+    .brand-light-bg { background-color: var(--brand-light); }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 4px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+    
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .channel-tab.active {
+      background-color: var(--brand-dark);
+      color: white;
+    }
+    .copy-btn:active { transform: scale(0.95); }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: { dark: '#1B5E20', main: '#4CAF50', light: '#E8F5E9', accent: '#FF8F00' } } } }
+    }
+  </script>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 fixed md:relative h-full transition-transform">
+    <div class="p-5 border-b border-gray-100 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg brand-bg flex items-center justify-center text-white shadow-lg shadow-green-900/20">
+        <i class="fa-solid fa-leaf"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-lg brand-text leading-tight">Nourish</h1>
+        <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Supplier Portal</p>
+      </div>
+    </div>
+
+    <nav class="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-thin">
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-chart-pie w-5 text-center"></i> <span class="text-sm font-medium">ទិដ្ឋភាពទូទៅ</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-box-open w-5 text-center"></i> <span class="text-sm font-medium">ផលិតផលរបស់ខ្ញុំ</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg brand-light-bg brand-text font-semibold transition border border-green-100">
+        <i class="fa-solid fa-wand-magic-sparkles w-5 text-center"></i> <span class="text-sm">Prompt Content Hub</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-truck-fast w-5 text-center"></i> <span class="text-sm font-medium">ការបញ្ជាទិញ</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> <span class="text-sm font-medium">ប្រាក់ចំណូល</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-sliders w-5 text-center"></i> <span class="text-sm font-medium">ការកំណត់</span>
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-gray-100">
+      <div class="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+        <img src="https://ui-avatars.com/api/?name=Farm+Manager&background=E8F5E9&color=1B5E20" class="w-9 h-9 rounded-full border-2 border-white" alt="Profile">
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-gray-800 truncate">Green Valley Farms</p>
+          <p class="text-[10px] text-green-600 font-medium">Verified Partner</p>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+    <!-- Top Header -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 md:px-8 z-10">
+      <div class="flex items-center gap-4">
+        <button id="menuToggle" class="md:hidden text-gray-500 hover:text-gray-800 text-xl">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h2 class="text-lg font-bold text-gray-800">Content Prompt Generator <span class="text-sm font-normal text-gray-400 ml-1">| Nourish Framework</span></h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-medium text-gray-500 hover:border-green-300 hover:text-green-700 transition bg-gray-50">
+          <i class="fa-solid fa-globe"></i> Khmer (Primary)
+        </button>
+        <button class="p-2 rounded-full text-gray-400 hover:bg-gray-100 relative">
+          <i class="fa-regular fa-bell text-lg"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-accent rounded-full"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto scrollbar-thin p-4 md:p-8">
+      <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center"><i class="fa-solid fa-leaf"></i></div>
+              <span class="text-xs text-gray-500 font-medium">សរុបផលិតផល</span>
+            </div>
+            <p class="text-xl font-bold text-gray-800">10</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-check-circle"></i></div>
+              <span class="text-xs text-gray-500 font-medium">ទិន្នផល Content</span>
+            </div>
+            <p class="text-xl font-bold text-gray-800">10/10</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center"><i class="fa-solid fa-fire"></i></div>
+              <span class="text-xs text-gray-500 font-medium">Active Deals</span>
+            </div>
+            <p class="text-xl font-bold text-gray-800">7</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center"><i class="fa-solid fa-mobile-screen"></i></div>
+              <span class="text-xs text-gray-500 font-medium">Channel Ready</span>
+            </div>
+            <p class="text-xl font-bold text-gray-800">5</p>
+          </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto">
+          
+          <!-- Left: Product List -->
+          <div class="lg:col-span-4 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col h-[600px]">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-xl">
+              <h3 class="font-semibold text-gray-700">ជ្រើសរើសផលិតផល</h3>
+              <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">10 មុខ</span>
+            </div>
+            <div class="flex-1 overflow-y-auto scrollbar-thin p-2 space-y-1" id="productList">
+              <!-- JS injected -->
+            </div>
+          </div>
+
+          <!-- Right: Content Output Preview -->
+          <div class="lg:col-span-8 flex flex-col gap-6">
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 card-hover transition-all fade-in" id="previewCard">
+              <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span id="pCategory" class="text-xs font-bold uppercase tracking-wider text-gray-400">Category</span>
+                    <span id="pDeal" class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-md font-semibold hidden">Deal</span>
+                  </div>
+                  <h2 id="pName" class="text-2xl font-bold text-gray-800 leading-tight">Product Name</h2>
+                  <p id="pOrigin" class="text-sm text-green-700 font-medium mt-1 flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot"></i> <span>Origin</span>
+                  </p>
+                </div>
+                <div class="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                  <button onclick="setChannel('web')" class="channel-tab active px-3 py-1.5 text-xs font-medium rounded-md transition" data-ch="web">Website</button>
+                  <button onclick="setChannel('app')" class="channel-tab px-3 py-1.5 text-xs font-medium rounded-md transition text-gray-600 hover:text-gray-900" data-ch="app">App</button>
+                  <button onclick="setChannel('social')" class="channel-tab px-3 py-1.5 text-xs font-medium rounded-md transition text-gray-600 hover:text-gray-900" data-ch="social">Social</button>
+                  <button onclick="setChannel('push')" class="channel-tab px-3 py-1.5 text-xs font-medium rounded-md transition text-gray-600 hover:text-gray-900" data-ch="push">Push</button>
+                  <button onclick="setChannel('sms')" class="channel-tab px-3 py-1.5 text-xs font-medium rounded-md transition text-gray-600 hover:text-gray-900" data-ch="sms">SMS</button>
+                </div>
+              </div>
+
+              <!-- Dynamic Content Blocks -->
+              <div id="contentBlocks" class="space-y-5">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Overlay -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/30 z-10 hidden md:hidden transition-opacity"></div>
+
+  <script>
+    // Data: 10 Products with Framework Outputs
+    const products = [
+      {
+        id: 1, name: "ប្រអប់ប៉េងប៉ោះ Heirloom", category: "បន្លែ", origin: "Johnson Family Farm", deal: "Subscribe & Save 15%",
+        headline: "រសជាតិរដូវក្តៅគ្រប់ថ្ងៃ",
+        blurb: "ប្រអប់ប៉េងប៉ោះ Heirloom នាំមកជូនអ្នកនូវរសជាតិផ្អែមធម្មជាតិដូចរដូវក្តៅពិតៗ។ កាប់ដោយដៃនៅ Johnson Family Farm និងស្រស់ពីកសិដ្ឋាន (Farm-fresh) ទាំងអស់គ្នា។ ជា Certified Organic ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ ដើម្បីផ្តល់ Convenience you deserve។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> ដាំក្នុងដីរស់ ដោយគ្មានសារធាតុគីមី—រសជាតិផ្អែមជាងគេ។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ត្រូវការប៉េងប៉ោះសម្រាប់ម្ហូបយប់នេះ? យើងដឹកដល់ផ្ទះក្នុងរយៈពេលម៉ោង។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រកសិដ្ឋានក្នុងតំបន់ និងទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "បន្ថែមពណ៌ និងរសជាតិដល់ចានរបស់អ្នក។ Nourish your home ជាមួយ Earth's finest ហើយសន្សំ 15% ពេល Subscribe។",
+        channels: {
+          app: "រសជាតិព្រឹកនេះ | Farm-fresh Heirloom Tomatoes. ដឹកជញ្ជូនឥតគិតថ្លៃលើ >$20។",
+          social: "🍅 ចាប់ផ្តើមថ្ងៃថ្មីដោយភាពសុទ្ធសាធ! Nourish your home ជាមួយ Heirloom Tomatoes កាប់ពី Johnson Farm ព្រឹកនេះ។ 🌿 #Organic #NourishKH #FarmFresh",
+          push: "🚚 ស្រស់ពីកសិដ្ឋាន! ប៉េងប៉ោះ Heirloom ចុះបញ្ជាឥឡូវ ដឹកជញ្ជូនឥតគិតថ្លៃ។",
+          sms: "Nourish: Farm-fresh Heirloom Tomatoes now available. Order for Same-Day Delivery. Save 15% on Subscribe. bit.ly/nourish1"
+        }
+      },
+      {
+        id: 2, name: "កញ្ចប់អាវ៉ូកាដូសរីរាង្គ", category: "ផ្លែឈើ", origin: "ភ្នំដំរី", deal: "បញ្ចុះតម្លៃ 20%",
+        headline: "ក្រៀមក្រណាត់ព្រឹកពីកម្ពុជា",
+        blurb: "កញ្ចប់អាវ៉ូកាដូសរីរាង្គប្រមូលព្រឹកនេះ ពីចម្ការតូចៗនៅតំបន់ភ្នំដំរី។ ផ្ទុកទៅដោយសារធាតុប្រឆាំងអុកស៊ីតកម្ម និងជាតិខ្លាញ់ល្អសម្រាប់សុខភាព។ Farm-fresh 100% ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូន Same-Day ដើម្បីភាពងាយស្រួលដែលអ្នកគួរទទួលបាន (Convenience you deserve)។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> Certified organic គ្មានថ្នាំសម្លាប់សត្វល្អិត—សុវត្ថិភាពសម្រាប់ក្មេង។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនក្នុងរយៈពេល 2-4 ម៉ោង ទូទាំងរាជធានី និងខេត្ត។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រកសិករ Local farms ផ្ទាល់ ដោយគ្មានអ្នកកណ្តាល។`
+        ],
+        cta: "ផ្លែឈើសរីរាង្គពិតប្រាកដ សម្រាប់គ្រួសារដែលយកចិត្តទុកដាក់លើសុខភាព។ Nourish your home — Earth's finest បញ្ចុះ 20%",
+        channels: {
+          app: "Healthy Fats Delivered. Organic Avocados from Phnom Damrei. Fresh today.",
+          social: "🥑 អាវ៉ូកាដូក្រៀមក្រណាត់ពីភ្នំដំរី! ស្រស់ ១០០% គ្មានសារធាតុគីមី។ បញ្ជាថ្ងៃនេះ ដឹកជញ្ជូនថ្ងៃនេះ! 🚚💨 #HealthyKH #Organic",
+          push: "🥑 Avocado Lovers! Farm-fresh batch just harvested. Get 20% off today!",
+          sms: "Nourish Alert: Organic Avocados harvested this morning! 20% OFF. Order now for same-day delivery. Link: bit.ly/avoc"
+        }
+      },
+      {
+        id: 3, name: "គ្រឿងផ្សំខ្មែរសរីរាង្គ", category: "គ្រឿងផ្សំ", origin: "កំពត", deal: "Free Delivery $20+",
+        headline: "ក្លិនឈ្ងុយមកពីដីម្តាយ",
+        blurb: "កញ្ចប់គ្រឿងផ្សំខ្មែររួមមាន ខ្ទឹមស ខ្ញី ស្លឹកគ្រៃ និងអំបិលសមុទ្រធម្មជាតិ។ ប្រមូលពីកសិដ្ឋានតាមតំបន់នីមួយៗ ដើម្បីផ្តល់រសជាតិសុទ្ធនៃម្ហូបខ្មែរពិតៗ។ Seasonal harvest ដែលផ្តល់ Quality you can taste ជាមួយ Same-Day Delivery។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> គ្មានសារធាតុគីមី រសជាតិដើមពីធម្មជាតិ 100%។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> រៀបចំម្ហូបបានលឿនជាងមុន ដោយគ្រឿងផ្សំរួចរាល់ស្រាប់។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> ផ្ទៀងផ្ទាត់ប្រភពច្បាស់លាស់ពីកសិដ្ឋានក្នុងស្រុក។`
+        ],
+        cta: "សម្រស់នៃម្ហូបខ្មែរ ចាប់ផ្តើមពីគ្រឿងផ្សំល្អ។ Nourish your home ជាមួយ Earth's finest — Free Delivery",
+        channels: {
+          app: "Authentic Khmer Flavors. Organic spice kit delivered to your door.",
+          social: "🌿 ម្ហូបខ្មែរដើម ចាប់ផ្តើមពីគ្រឿងផ្សំល្អ! ស្លឹកគ្រៃ ខ្ញី ខ្ទឹម សរីរាង្គ 100%។ កុំខកខាន! 🍲 #KhmerFood #Organic",
+          push: "🧄 Missing authentic Khmer taste? We have fresh spices & herbs ready!",
+          sms: "Nourish: Authentic Khmer Organic Spice Kit available. Farm-fresh & same-day delivery. bit.ly/spices"
+        }
+      },
+      {
+        id: 4, name: "ស្វាយរដូវកាលសុវណ្ណ", category: "ផ្លែឈើ", origin: "តាកែវ", deal: "Seasonal Special",
+        headline: "ផ្អែមពេញពែង រដូវកាលនេះ",
+        blurb: "ស្វាយរដូវកាលសុវណ្ណ ជម្រើសដំបូងពីចម្ការតាកែវ។ ផ្អែមធម្មជាតិ ទន់ និងមានក្លិនឈ្ងុយ។ ប្រមូលដោយដៃនៅពេលទុំច្បាស់ ដើម្បីធានាថារសជាតិល្អបំផុតនៅពេលដល់ដៃអ្នក។ Farm-fresh និង Certified organic ដែលផ្តល់ Convenience you deserve។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> ប្រមូលតែពេលទុំពេញលេញ រសជាតិផ្អែមធម្មជាតិខ្ពស់។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនថ្ងៃតែមួយ ទូទាំង 24 ខេត្ត/រាជធានី។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> ផ្ទៀងផ្ទាត់ដោយក្រុមអ្នកជំនាញ Local farms។`
+        ],
+        cta: "រដូវកាលស្វាយបានមកដល់ហើយ! Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ",
+        channels: {
+          app: "Mango Season is Here! Sweet & Organic Sokha Mangoes from Takeo.",
+          social: "🥭 រដូវស្វាយមកដល់ហើយ! ស្វាយសុវណ្ណស្រស់ ផ្អែមធម្មជាតិពីតាកែវ។ កម្ម៉ង់ថ្ងៃនេះ ភ្លាមៗ! 🚛💨 #MangoSeason #Nourish",
+          push: "🥭 It's Mango Time! Hand-picked organic Sokha Mangoes are ready.",
+          sms: "Nourish: Takeo Mango Season is OPEN! Organic, hand-picked, delivered fresh today. Order: bit.ly/mango"
+        }
+      },
+      {
+        id: 5, name: "អង្ករក្រអូបមន្ទីរី", category: "ធញ្ញជាតិ", origin: "ត្បូងឃ្មុំ", deal: "Subscribe & Save 10%",
+        headline: "ក្លិនឈ្ងុយពីវាលភ្លៀង",
+        blurb: "ស្រូវអង្ករក្រអូបមន្ទីរី ដាំដុះលើដីប្រៃសាគរតំបន់ខ្ពង់រាប។ ផ្ទុកទៅដោយសារធាតុចិញ្ចឹម និងក្លិនឈ្ងុយធម្មជាតិ។ កែច្នៃដោយបច្ចេកទេសប្រពៃណី ដើម្បីរក្សាគុណភាពដើម។ Certified organic និង Quality you can taste ជាមួយ Same-Day Delivery។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> មិនលាយឡំ មិនប្រើប្រេងក្រអូប ក្លិនធម្មជាតិពិត។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនឥតគិតថ្លៃលើការបញ្ជាទិញ >$20។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> វិញ្ញាបនបត្រសរីរាង្គច្បាស់លាស់ គាំទ្រកសិករខ្មែរ។`
+        ],
+        cta: "បាយក្រអូប ជាស្នាមញញឹមគ្រួសារ។ Nourish your home ជាមួយ Earth's finest — Subscribe & Save",
+        channels: {
+          app: "Premium Jasmine Rice. Grown in Tboung Khmum, delivered fresh.",
+          social: "🌾 អង្ករក្រអូបមន្ទីរី ដើម! មិនលាយ មិនលាបក្រអូប ក្លិនធម្មជាតិពិត។ គាំទ្រកសិករខ្មែរ។ 🇰🇭 #CambodianRice #Organic",
+          push: "🍚 Craving fresh rice? Organic Mondulkiri Jasmine rice just harvested.",
+          sms: "Nourish: Premium Organic Jasmine Rice available. Farm-direct pricing. Save 10% on subscription. bit.ly/rice"
+        }
+      },
+      {
+        id: 6, name: "បន្លែបៃតងកាត់ថ្មី", category: "បន្លែ", origin: "បាត់ដំបង", deal: "Farm-Fresh Daily",
+        headline: "ស្រស់ៗពីចម្ការព្រឹកនេះ",
+        blurb: "បន្លែបៃតងកាត់ថ្មីរួមមាន ស្ពៃ ត្រឡាច និងស្ពៃខ្មែរ។ ប្រមូលពីចម្ការសរីរាង្គនៅតំបន់បាត់ដំបង។ គ្មានសារធាតុគីមី គ្មានថ្នាំដាំ រក្សាភាពស្រស់ដោយប្រព័ន្ធត្រជាក់។ Quality you can taste និង Convenience you deserve ជាមួយ Same-Day Delivery។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> កាត់ថ្មីរៀងរាល់ព្រឹក រក្សាសារធាតុចិញ្ចឹម 95%+។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនក្នុងថ្ងៃតែមួយ មិនចាំបាច់ទៅផ្សារ។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "បន្លែស្រស់ សុខភាពល្អ គ្រួសារសប្បាយ។ Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ",
+        channels: {
+          app: "Daily Green Harvest. Freshly cut veggies from Battambang.",
+          social: "🥬 បន្លែស្រស់ៗកាត់ព្រឹកនេះ! គ្មានសារធាតុគីមី រក្សាសុខភាពគ្រួសារ។ ដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ! 🚛 #FarmFresh #HealthyLife",
+          push: "🥦 Fresh cut greens ready! Harvested at dawn, delivered by noon.",
+          sms: "Nourish: Freshly harvested organic greens from Battambang. Same-day delivery available. Order: bit.ly/greens"
+        }
+      },
+      {
+        id: 7, name: "ទឹកឃុំធម្មជាតិព្រៃ", category: "ផលិតផលព្រៃ", origin: "ភ្នំក្រវាញ", deal: "Wild Harvested",
+        headline: "ផ្អែមពីព្រៃភ្នំក្រវាញ",
+        blurb: "ទឹកឃុំធម្មជាតិព្រៃភ្នំក្រវាញ ប្រមូលដោយដៃពីសំបុកឃ្មុំព្រៃ។ ផ្អែមធម្មជាតិ មិនលាយជាតិស្ករ ផ្ទុកអង់ទីអុកស៊ីតកម្មខ្ពស់។ គាំទ្រអ្នកថែរក្សាព្រៃ និងជីវិតសត្វឃ្មុំ។ Farm-fresh និង Quality you can taste ជាមួយដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> 100% ធម្មជាតិ មិនកែច្នៃ មិនលាយសារធាតុគីមី។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូន Same-Day ទូទាំង 24 ខេត្ត/រាជធានី។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រសហគមន៍ Local farms និងការទូទាត់មានសុវត្ថិភាព។`
+        ],
+        cta: "ផ្អែមធម្មជាតិ សុខភាពពីព្រៃ។ Nourish your home ជាមួយ Earth's finest — ទិញឥឡូវ",
+        channels: {
+          app: "Pure Wild Honey. Sourced ethically from Cardamom Mountains.",
+          social: "🍯 ផ្អែមព្រៃពិត មិនលាយស្ករ! ទឹកឃ្មុំព្រៃភ្នំក្រវាញ ផ្តល់អ្វីដែលធម្មជាតិផ្តល់ឱ្យ។ 🌿🐝 #WildHoney #EcoFriendly",
+          push: "🍯 Pure Wild Honey just collected! Limited stock available.",
+          sms: "Nourish: 100% Pure Wild Cardamom Honey available. Sustainably harvested. Order today: bit.ly/honey"
+        }
+      },
+      {
+        id: 8, name: "សាច់គោសរីរាង្គ", category: "សាច់", origin: "វាលស្មៅ", deal: "Organic Certified",
+        headline: "សាច់គោស្រស់ពីវាលស្មៅ",
+        blurb: "សាច់គោសរីរាង្គប្រចាំខេត្ត ចិញ្ចឹមដោយធម្មជាតិលើវាលស្មៅស្រស់។ គ្មានអ័រម៉ូន គ្មានថ្នាំបង្កើនលូតលាស់ សាច់ទន់ និងមានរសជាតិដើម។ Certified organic និង Quality you can taste ជាមួយ Convenience you deserve ដឹកជញ្ជូនក្នុងថ្ងៃតែមួយ។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> ចិញ្ចឹមដោយធម្មជាតិ សាច់ស្អាត គ្មានសារធាតុគីមី។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនក្នុងប្រអប់ត្រជាក់ រក្សាភាពស្រស់ 24 ម៉ោង។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រកសិករ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "ប្រូតេអ៊ីនស្អាត សម្រាប់គ្រួសារសុខភាពល្អ។ Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ",
+        channels: {
+          app: "Grass-Fed Organic Beef. Clean protein, delivered cold-chain.",
+          social: "🥩 សាច់គោស្អាត គ្មានអ័រម៉ូន! ចិញ្ចឹមធម្មជាតិ ១០០%។ រសជាតិដើម សុវត្ថិភាពសម្រាប់គ្រួសារ។ 🚛💨 #OrganicMeat #HealthyKH",
+          push: "🥩 Premium Grass-fed Beef available. Cold-chain delivered fresh.",
+          sms: "Nourish: Organic Grass-fed Beef now in stock. Hormone-free & clean. Same-day cold delivery. bit.ly/beef"
+        }
+      },
+      {
+        id: 9, name: "ផ្សិតចម្រុះត្រជាក់", category: "ផ្សិត", origin: "ខ្ពង់រាប", deal: "Highland Grown",
+        headline: "ផ្សិតស្រស់ពីតំបន់ត្រជាក់",
+        blurb: "ផ្សិតចម្រុះពីតំបន់ត្រជាក់រួមមាន ផ្សិតស្វាយ ផ្សិតកន្ត្រៃ។ ដាំដុះនៅតំបន់ខ្ពង់រាប។ គ្មានថ្នាំពុល ផ្តល់ជាតិស៊ីលីកា និងប្រូតេអ៊ីនចិញ្ចឹម។ Farm-fresh និង Quality you can taste ជាមួយ Same-Day Delivery សម្រាប់ Convenience you deserve។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> ដាំក្នុងបរិស្ថានត្រជាក់ គ្មានសារធាតុគីមី រសជាតិធម្មជាតិ។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនថ្ងៃតែមួយ រក្សាភាពស្រស់ក្នុងប្រអប់ត្រជាក់។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "រសជាតិដី ពីតំបន់ត្រជាក់។ Nourish your home ជាមួយ Earth's finest — ទិញឥឡូវ",
+        channels: {
+          app: "Cool Climate Mushrooms. Highland grown, rich in nutrients.",
+          social: "🍄 ផ្សិតត្រជាក់ស្រស់ៗពីខ្ពង់រាប! គ្មានថ្នាំ ផ្ទុកប្រូតេអ៊ីន។ សម្រាប់សុខភាព និងរសជាតិដើម។ 🌲 #HighlandMushrooms #Organic",
+          push: "🍄 Fresh Highland Mushrooms harvested! Limited seasonal batch.",
+          sms: "Nourish: Fresh highland mushrooms (Shiitake & Oyster) available. Nutrient-rich & organic. bit.ly/mush"
+        }
+      },
+      {
+        id: 10, name: "ផ្លែក្រូចឆ្មារម៉ៃយ៉ា", category: "ផ្លែឈើ", origin: "កំពង់ចាម", deal: "Seasonal Box",
+        headline: "ក្លិនឈ្ងុយពីចម្ការតូច",
+        blurb: "ផ្លែក្រូចឆ្មារម៉ៃយ៉ា ប្រមូលពីចម្ការតូចៗនៅតំបន់កំពង់ចាម។ ផ្អែមជូរធម្មជាតិ ផ្ទុកវីតាមីន C ខ្ពស់ សម្រាប់ពង្រឹងភាពស៊ាំ។ Farm-fresh និង Certified organic ដែលផ្តល់ Quality you can taste និង Convenience you deserve ជាមួយដឹកជញ្ជូនរហ័ស។",
+        trust: [
+          `<span class="font-semibold text-green-700">គុណភាពសរីរាង្គ:</span> ប្រមូលដោយដៃ គ្មានថ្នាំសម្លាប់សត្វល្អិត វីតាមីន C ខ្ពស់។`,
+          `<span class="font-semibold text-green-700">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូន Same-Day ទូទាំងប្រទេស ឥតគិតថ្លៃលើ >$20។`,
+          `<span class="font-semibold text-green-700">ទុកចិត្តបាន:</span> គាំទ្រកសិដ្ឋាន Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "ភាពស៊ាំខ្លាំង ចាប់ផ្តើមពីផ្លែក្រូចធម្មជាតិ។ Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ",
+        channels: {
+          app: "Immunity Boosters. Organic Meyer Lemons from Kampong Cham.",
+          social: "🍋 វីតាមីន C ខ្ពស់ ពង្រឹងសុខភាព! ក្រូចឆ្មារម៉ៃយ៉ា សរីរាង្គ ពីកំពង់ចាម។ ផ្អែមជូរធម្មជាតិ។ 🍵💪 #ImmunityBoost #OrganicFruit",
+          push: "🍋 Boost your immunity! Fresh organic Meyer lemons just harvested.",
+          sms: "Nourish: Vitamin C rich Meyer Lemons in stock. Organic & farm-direct. Order for same-day delivery: bit.ly/citrus"
+        }
+      }
+    ];
+
+    // State
+    let currentProductId = 1;
+    let currentChannel = 'web';
+
+    // Render Product List
+    const listContainer = document.getElementById('productList');
+    function renderList() {
+      listContainer.innerHTML = products.map(p => `
+        <div class="p-3 rounded-lg cursor-pointer transition flex items-center gap-3 hover:bg-gray-50 ${p.id === currentProductId ? 'bg-green-50 border border-green-200' : 'border border-transparent'}" onclick="selectProduct(${p.id})">
+          <div class="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center text-gray-500 text-lg">
+            <i class="fa-solid fa-${p.id % 2 === 0 ? 'apple-whole' : 'carrot'}"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-semibold text-gray-800 truncate">${p.name}</h4>
+            <p class="text-[11px] text-gray-400">${p.origin}</p>
+          </div>
+          ${p.deal ? `<span class="text-[9px] bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded font-medium whitespace-nowrap">Promo</span>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Update Preview
+    function updatePreview() {
+      const p = products.find(x => x.id === currentProductId);
+      document.getElementById('pCategory').textContent = p.category;
+      document.getElementById('pName').textContent = p.name;
+      document.getElementById('pOrigin').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i> ${p.origin}`;
+      
+      const dealEl = document.getElementById('pDeal');
+      if (p.deal) { dealEl.textContent = p.deal; dealEl.classList.remove('hidden'); } 
+      else { dealEl.classList.add('hidden'); }
+
+      const channelText = p.channels[currentChannel];
+      
+      // Web/App/Social layout
+      if (currentChannel === 'web' || currentChannel === 'app' || currentChannel === 'social') {
+        document.getElementById('contentBlocks').innerHTML = `
+          <div class="fade-in">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Headline</label>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 relative group">
+              <h3 class="text-xl font-bold text-brand-dark">${p.headline}</h3>
+              <button onclick="copyToClipboard('${p.headline.replace(/'/g, "\\'")}', this)" class="absolute top-2 right-2 p-1.5 rounded-md bg-white shadow-sm border border-gray-200 opacity-0 group-hover:opacity-100 transition text-gray-500 hover:text-green-600"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+          <div class="fade-in">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Descriptive Blurb</label>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 relative group text-gray-700 leading-relaxed text-sm">
+              ${p.blurb}
+              <button onclick="copyToClipboard('${p.blurb.replace(/'/g, "\\'")}', this)" class="absolute top-2 right-2 p-1.5 rounded-md bg-white shadow-sm border border-gray-200 opacity-0 group-hover:opacity-100 transition text-gray-500 hover:text-green-600"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+          <div class="fade-in">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Key Trust Points</label>
+            <div class="bg-green-50/50 border border-green-100 rounded-lg p-4 space-y-2 text-sm">
+              ${p.trust.map((t, i) => `<div class="flex items-start gap-2"><span class="mt-1 text-green-600"><i class="fa-solid fa-circle-check"></i></span><div class="text-gray-700 flex-1">${t}</div><button onclick="copyTrust(${p.id}, ${i}, this)" class="text-gray-300 hover:text-green-600 transition"><i class="fa-regular fa-copy"></i></button></div>`).join('')}
+            </div>
+          </div>
+          <div class="fade-in">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Call-to-Action (CTA)</label>
+            <div class="bg-brand-dark text-white rounded-lg p-4 relative group shadow-lg shadow-green-900/10">
+              <p class="font-semibold">${p.cta}</p>
+              <button onclick="copyToClipboard('${p.cta.replace(/'/g, "\\'")}', this, true)" class="absolute top-2 right-2 p-1.5 rounded-md bg-white/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition text-white hover:bg-white/30"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+          ${currentChannel !== 'web' ? `
+          <div class="fade-in mt-2">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">Channel Specific Format</label>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 relative group text-blue-900 text-sm font-medium">
+              ${channelText}
+              <button onclick="copyToClipboard('${channelText.replace(/'/g, "\\'")}', this)" class="absolute top-2 right-2 p-1.5 rounded-md bg-white shadow-sm border border-blue-200 opacity-0 group-hover:opacity-100 transition text-blue-500 hover:text-blue-700"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>` : ''}
+        `;
+      } else {
+        // Push / SMS Layout
+        document.getElementById('contentBlocks').innerHTML = `
+          <div class="fade-in">
+            <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5 block">${currentChannel === 'push' ? 'Push Notification' : 'SMS Format'}</label>
+            <div class="bg-gray-800 text-white rounded-lg p-4 relative group shadow-lg font-mono text-sm">
+              ${channelText}
+              <button onclick="copyToClipboard('${channelText.replace(/'/g, "\\'")}', this)" class="absolute top-2 right-2 p-1.5 rounded-md bg-white/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition text-white hover:bg-white/30"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-1.5 text-center">Optimized for ${currentChannel === 'push' ? '~150 chars' : '160 chars'}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3 fade-in mt-2">
+             <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-center">
+               <span class="block text-xs text-gray-500 mb-1">Headline (Fallback)</span>
+               <span class="text-sm font-bold text-gray-800">${p.headline}</span>
+             </div>
+             <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-center">
+               <span class="block text-xs text-gray-500 mb-1">Brand Keyword</span>
+               <span class="text-sm font-bold text-green-700">Nourish your home</span>
+             </div>
+          </div>
+        `;
+      }
+    }
+
+    window.selectProduct = (id) => {
+      currentProductId = id;
+      renderList();
+      updatePreview();
+    };
+
+    window.setChannel = (ch) => {
+      currentChannel = ch;
+      document.querySelectorAll('.channel-tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.ch === ch);
+        b.classList.toggle('text-gray-600', b.dataset.ch !== ch);
+        b.classList.toggle('bg-transparent', b.dataset.ch !== ch);
+      });
+      updatePreview();
+    };
+
+    window.copyToClipboard = (text, btn, isDark = false) => {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        btn.classList.add('text-green-500', 'bg-green-100');
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('text-green-500', 'bg-green-100');
+        }, 1500);
+      });
+    };
+
+    window.copyTrust = (prodId, idx, btn) => {
+      const p = products.find(x => x.id === prodId);
+      // Strip HTML tags for clean copy
+      const cleanText = p.trust[idx].replace(/<[^>]*>/g, '');
+      navigator.clipboard.writeText(cleanText).then(() => {
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        btn.classList.add('text-green-600');
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('text-green-600');
+        }, 1500);
+      });
+    };
+
+    // Sidebar Toggle
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('fixed');
+      sidebar.classList.toggle('inset-0');
+      overlay.classList.toggle('hidden');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.add('hidden');
+      sidebar.classList.remove('fixed', 'inset-0');
+      overlay.classList.add('hidden');
+    });
+
+    // Init
+    renderList();
+    updatePreview();
+  </script>
+</body>
+</html>
+

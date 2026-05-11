@@ -1,0 +1,821 @@
+  <!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nourish – ផ្ទះដឹកជញ្ជូនម្ហូបស្រស់</title>
+  <link href="https://cdn.fontsource.org/css/@fontsource/nunito-sans/400/400.css" rel="stylesheet">
+  <link href="https://cdn.fontsource.org/css/@fontsource/nunito-sans/600/600.css" rel="stylesheet">
+  <link href="https://cdn.fontsource.org/css/@fontsource/nunito-sans/700/700.css" rel="stylesheet">
+  <style>
+    :root {
+      --green-primary: #1B5E20;
+      --green-light: #4CAF50;
+      --green-pale: #E8F5E9;
+      --earth-brown: #5D4037;
+      --cream: #FAF8F5;
+      --white: #FFFFFF;
+      --text-dark: #212121;
+      --text-medium: #555555;
+      --text-light: #777777;
+      --accent-orange: #FF8F00;
+      --shadow-soft: 0 4px 20px rgba(0,0,0,0.06);
+      --shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans Khmer', 'Nunito Sans', 'Segoe UI', system-ui, sans-serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap');
+
+    header {
+      background: linear-gradient(135deg, var(--green-primary) 0%, #2E7D32 50%, var(--green-light) 100%);
+      padding: 2.5rem 1.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+      color: var(--white);
+      text-align: center;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green-primary);
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-content p {
+      font-size: 1.15rem;
+      opacity: 0.95;
+      max-width: 650px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      padding: 0.7rem 1.4rem;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--green-primary);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border-color: var(--white);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    .provinces-marquee {
+      background: var(--green-pale);
+      padding: 1.2rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .marquee-content {
+      display: inline-flex;
+      animation: marquee 45s linear infinite;
+      gap: 2.5rem;
+      padding-right: 2.5rem;
+      color: var(--text-medium);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    main {
+      max-width: 1280px;
+      margin: -3rem auto 4rem;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-top: 1.5rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      color: var(--green-primary);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-header p {
+      color: var(--text-medium);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--green-light), var(--accent-orange));
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .product-tag {
+      background: var(--green-pale);
+      color: var(--green-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .deal-tag {
+      background: var(--accent-orange);
+      color: var(--white);
+      padding: 0.4rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .headline {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--green-primary);
+      line-height: 1.3;
+    }
+
+    .blurb {
+      color: var(--text-medium);
+      line-height: 1.8;
+      font-size: 0.95rem;
+    }
+
+    .trust-points {
+      background: #F8FAF8;
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      margin-top: 0.3rem;
+    }
+
+    .trust-title {
+      font-weight: 600;
+      color: var(--earth-brown);
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+    }
+
+    .trust-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .trust-list li {
+      font-size: 0.88rem;
+      color: var(--text-medium);
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .trust-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--green-light);
+      font-weight: 700;
+    }
+
+    .trust-pillar {
+      font-weight: 600;
+      color: var(--green-primary);
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, #F1F8E9 0%, #E8F5E9 100%);
+      padding: 1.3rem;
+      border-radius: var(--radius-md);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .cta-text {
+      font-weight: 600;
+      color: var(--green-primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--green-primary);
+      color: var(--white);
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .cta-btn:hover {
+      background: var(--green-light);
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+    }
+
+    footer {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-text {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .footer-links span {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .footer-links span:hover {
+      color: var(--green-light);
+    }
+
+    .copyright {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 1.5rem;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+    }
+
+    .pulse-anim {
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--green-primary);
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 10;
+      border: none;
+      font-size: 1.2rem;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      background: var(--green-light);
+      transform: translateY(-4px);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon">🌿</div>
+        Nourish
+      </div>
+      <div class="nav-links">
+        <span>ផ្ទះ</span>
+        <span>ផលិតផល</span>
+        <span>កសិដ្ឋាន</span>
+        <span>ទំនាក់ទំនង</span>
+      </div>
+    </div>
+    <div class="hero-content">
+      <h1>Earth's finest ដឹកជញ្ជូនដល់ផ្ទះអ្នក</h1>
+      <p>វេទិកាដឹកជញ្ជូនម្ហូបស្រស់ និងសរីរាង្គដែលមានគុណភាពខ្ពស់ ផ្គត់ផ្គង់ដល់ 24 ខេត្ត/រាជធានីនៅកម្ពុជា។ Nourish your home ជាមួយផលិតផលពី Local farms តាមរដូវកាល។</p>
+      <div class="hero-badges">
+        <div class="badge">🚚 ដឹកជញ្ជូនឥតគិតថ្លៃលើការបញ្ជាទិញលើស $20</div>
+        <div class="badge">⚡ Same-Day Delivery</div>
+        <div class="badge">🔒 ការទូទាត់មានសុវត្ថិភាព 100%</div>
+      </div>
+      <div class="hero-cta">
+        <a href="#products" class="btn btn-primary">ស្វែងរកផលិតផល</a>
+        <a href="#" class="btn btn-secondary">មើលគម្រោង</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="provinces-marquee">
+    <div class="marquee-content">
+      <span>📍 ភ្នំពេញ</span><span>កណ្ដាល</span><span>កំពង់ធំ</span><span>កំពង់ឆ្នាំង</span><span>កំពង់ស្ពឺ</span><span>កំពង់ចាម</span><span>កំពត</span><span>កែប</span><span>កោះកុង</span><span>ក្រចេះ</span><span>មណ្ឌលគីរី</span><span>បាត់ដំបង</span><span>បន្ទាយមានជ័យ</span><span>ប៉ៃលិន</span><span>ព្រះវិហារ</span><span>ព្រៃវែង</span><span>ពោធិ៍សាត់</span><span>រតនគីរី</span><span>សៀមរាប</span><span>ស្ទឹងត្រែង</span><span>ស្វាយរៀង</span><span>តាកែវ</span><span>ត្បូងឃ្មុំ</span><span>ឧត្តរមានជ័យ</span>
+      <span>📍 ភ្នំពេញ</span><span>កណ្ដាល</span><span>កំពង់ធំ</span><span>កំពង់ឆ្នាំង</span><span>កំពង់ស្ពឺ</span><span>កំពង់ចាម</span><span>កំពត</span><span>កែប</span><span>កោះកុង</span><span>ក្រចេះ</span><span>មណ្ឌលគីរី</span><span>បាត់ដំបង</span><span>បន្ទាយមានជ័យ</span><span>ប៉ៃលិន</span><span>ព្រះវិហារ</span><span>ព្រៃវែង</span><span>ពោធិ៍សាត់</span><span>រតនគីរី</span><span>សៀមរាប</span><span>ស្ទឹងត្រែង</span><span>ស្វាយរៀង</span><span>តាកែវ</span><span>ត្បូងឃ្មុំ</span><span>ឧត្តរមានជ័យ</span>
+    </div>
+  </div>
+
+  <main>
+    <div class="section-header" id="products">
+      <h2>Sample Outputs – 10 ផលិតផល</h2>
+      <p>ឧទាហរណ៍ការប្រើប្រាស់ Prompt Engineering Framework សម្រាប់ Nourish លើផលិតផលជាក់ស្តែង 10 មុខ</p>
+    </div>
+
+    <div class="product-grid">
+      
+      <!-- Product 1 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">បន្លែ & ផ្លែឈើ</span>
+          <span class="deal-tag">Subscribe & Save 15%</span>
+        </div>
+        <h3 class="headline">រសជាតិរដូវក្តៅគ្រប់ថ្ងៃ</h3>
+        <p class="blurb">ប្រអប់ប៉េងប៉ោះ Heirloom នាំមកជូនអ្នកនូវរសជាតិផ្អែមធម្មជាតិដូចរដូវក្តៅពិតៗ។ កាប់ដោយដៃនៅ Johnson Family Farm និងស្រស់ពីកសិដ្ឋាន (Farm-fresh) ទាំងអស់គ្នា។ ជា Certified Organic ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ ដើម្បីផ្តល់ Convenience you deserve។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> ដាំក្នុងដីរស់ ដោយគ្មានសារធាតុគីមី—រសជាតិផ្អែមជាងគេ។</li>
+            <li><span class="trust-pillar">Convenience:</span> ត្រូវការប៉េងប៉ោះសម្រាប់ម្ហូបយប់នេះ? យើងដឹកដល់ផ្ទះក្នុងរយៈពេលម៉ោង។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រកសិដ្ឋានក្នុងតំបន់ និងទូទាត់មានសុវត្ថិភាព 100%។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">បន្ថែមពណ៌ និងរសជាតិដល់ចានរបស់អ្នក។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — សន្សំ 15%</a>
+        </div>
+      </article>
+
+      <!-- Product 2 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">ផ្លែឈើសរីរាង្គ</span>
+          <span class="deal-tag">បញ្ចុះតម្លៃ 20%</span>
+        </div>
+        <h3 class="headline">ក្រៀមក្រណាត់ព្រឹកពីកម្ពុជា</h3>
+        <p class="blurb">កញ្ចប់អាវ៉ូកាដូសរីរាង្គប្រមូលព្រឹកនេះ ពីចម្ការតូចៗនៅតំបន់ភ្នំដំរី។ ផ្ទុកទៅដោយសារធាតុប្រឆាំងអុកស៊ីតកម្ម និងជាតិខ្លាញ់ល្អសម្រាប់សុខភាព។ Farm-fresh 100% ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូន Same-Day ដើម្បីភាពងាយស្រួលដែលអ្នកគួរទទួលបាន (Convenience you deserve)។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> Certified organic គ្មានថ្នាំសម្លាប់សត្វល្អិត—សុវត្ថិភាពសម្រាប់ក្មេង។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូនក្នុងរយៈពេល 2-4 ម៉ោង ទូទាំងរាជធានី និងខេត្ត។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រកសិករ Local farms ផ្ទាល់ ដោយគ្មានអ្នកកណ្តាល។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">ផ្លែឈើសរីរាង្គពិតប្រាកដ សម្រាប់គ្រួសារដែលយកចិត្តទុកដាក់លើសុខភាព។</p>
+          <a href="#" class="cta-btn">Nourish your home — Earth's finest បញ្ចុះ 20%</a>
+        </div>
+      </article>
+
+      <!-- Product 3 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">គ្រឿងផ្សំ & រសជាតិ</span>
+          <span class="deal-tag">Free Delivery $20+</span>
+        </div>
+        <h3 class="headline">ក្លិនឈ្ងុយមកពីដីម្តាយ</h3>
+        <p class="blurb">កញ្ចប់គ្រឿងផ្សំខ្មែរសរីរាង្គរួមមាន គ្រឿងផ្សំស្រស់ៗ ដូចជា ខ្ទឹមស ខ្ញី ស្លឹកគ្រៃ ប្រហុក និងអំបិលសមុទ្រធម្មជាតិ។ ប្រមូលពីកសិដ្ឋានតាមតំបន់នីមួយៗ ដើម្បីផ្តល់រសជាតិសុទ្ធនៃម្ហូបខ្មែរពិតៗ។ Seasonal harvest ដែលផ្តល់ Quality you can taste ជាមួយ Same-Day Delivery។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> គ្មានសារធាតុគីមី រសជាតិដើមពីធម្មជាតិ 100%។</li>
+            <li><span class="trust-pillar">Convenience:</span> រៀបចំម្ហូបបានលឿនជាងមុន ដោយគ្រឿងផ្សំរួចរាល់ស្រាប់។</li>
+            <li><span class="trust-pillar">Trust:</span> ផ្ទៀងផ្ទាត់ប្រភពច្បាស់លាស់ពីកសិដ្ឋានក្នុងស្រុក។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">សម្រស់នៃម្ហូបខ្មែរ ចាប់ផ្តើមពីគ្រឿងផ្សំល្អ។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — Free Delivery</a>
+        </div>
+      </article>
+
+      <!-- Product 4 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">ផ្លែឈើរដូវកាល</span>
+          <span class="deal-tag">Seasonal Special</span>
+        </div>
+        <h3 class="headline">ផ្អែមពេញពែង រដូវកាលនេះ</h3>
+        <p class="blurb">ផ្លែស្វាយរដូវកាលសុវណ្ណ ជម្រើសដំបូងពីចម្ការកំពត និងតាកែវ។ ផ្អែមធម្មជាតិ ទន់ និងមានក្លិនឈ្ងុយ។ ប្រមូលដោយដៃនៅពេលទុំច្បាស់ ដើម្បីធានាថារសជាតិល្អបំផុតនៅពេលដល់ដៃអ្នក។ Farm-fresh និង Certified organic ដែលផ្តល់ Convenience you deserve ក្នុងតម្លៃសមរម្យ។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> ប្រមូលតែពេលទុំពេញលេញ រសជាតិផ្អែមធម្មជាតិខ្ពស់។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូនថ្ងៃតែមួយ ទូទាំង 24 ខេត្ត/រាជធានី។</li>
+            <li><span class="trust-pillar">Trust:</span> ផ្ទៀងផ្ទាត់ដោយក្រុមអ្នកជំនាញ Local farms។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">រដូវកាលស្វាយបានមកដល់ហើយ!</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ</a>
+        </div>
+      </article>
+
+      <!-- Product 5 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">គ្រាប់ធញ្ញជាតិ & ម្សៅ</span>
+          <span class="deal-tag">Subscribe & Save 10%</span>
+        </div>
+        <h3 class="headline">ក្លិនឈ្ងុយពីវាលភ្លៀង</h3>
+        <p class="blurb">ស្រូវអង្ករក្រអូបមន្ទីរី ដាំដុះលើដីប្រៃសាគរតំបន់ខ្ពង់រាប។ ផ្ទុកទៅដោយសារធាតុចិញ្ចឹម និងក្លិនឈ្ងុយធម្មជាតិ។ កែច្នៃដោយបច្ចេកទេសប្រពៃណី ដើម្បីរក្សាគុណភាពដើម។ Certified organic និង Quality you can taste ជាមួយ Same-Day Delivery សម្រាប់ភាពងាយស្រួលរបស់អ្នក។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> មិនលាយឡំ មិនប្រើប្រេងក្រអូប ក្លិនធម្មជាតិពិត។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូនឥតគិតថ្លៃលើការបញ្ជាទិញ >$20។</li>
+            <li><span class="trust-pillar">Trust:</span> វិញ្ញាបនបត្រសរីរាង្គច្បាស់លាស់ គាំទ្រកសិករខ្មែរ។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">បាយក្រអូប ជាស្នាមញញឹមគ្រួសារ។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — Subscribe & Save</a>
+        </div>
+      </article>
+
+      <!-- Product 6 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">បន្លែបៃតង</span>
+          <span class="deal-tag">Farm-Fresh Daily</span>
+        </div>
+        <h3 class="headline">ស្រស់ៗពីចម្ការព្រឹកនេះ</h3>
+        <p class="blurb">បន្លែបៃតងកាត់ថ្មីរួមមាន ស្ពៃ បៃតង ត្រឡាច និងស្ពៃខ្មែរ ប្រមូលពីចម្ការសរីរាង្គនៅតំបន់បាត់ដំបង។ គ្មានសារធាតុគីមី គ្មានថ្នាំដាំ រក្សាភាពស្រស់ដោយប្រព័ន្ធត្រជាក់។ Quality you can taste និង Convenience you deserve ជាមួយ Same-Day Delivery ទូទាំងប្រទេស។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> កាត់ថ្មីរៀងរាល់ព្រឹក រក្សាសារធាតុចិញ្ចឹម 95%+។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូនក្នុងថ្ងៃតែមួយ មិនចាំបាច់ទៅផ្សារ។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">បន្លែស្រស់ សុខភាពល្អ គ្រួសារសប្បាយ។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ</a>
+        </div>
+      </article>
+
+      <!-- Product 7 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">ផលិតផលធម្មជាតិ</span>
+          <span class="deal-tag">Wild Harvested</span>
+        </div>
+        <h3 class="headline">ផ្អែមពីព្រៃភ្នំក្រវាញ</h3>
+        <p class="blurb">ទឹកឃុំធម្មជាតិព្រៃភ្នំក្រវាញ ប្រមូលដោយដៃពីសំបុកឃ្មុំព្រៃ។ ផ្អែមធម្មជាតិ មិនលាយជាតិស្ករ ផ្ទុកអង់ទីអុកស៊ីតកម្មខ្ពស់។ គាំទ្រអ្នកថែរក្សាព្រៃ និងជីវិតសត្វឃ្មុំ។ Farm-fresh និង Quality you can taste ជាមួយដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> 100% ធម្មជាតិ មិនកែច្នៃ មិនលាយសារធាតុគីមី។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូន Same-Day ទូទាំង 24 ខេត្ត/រាជធានី។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រសហគមន៍ Local farms និងការទូទាត់មានសុវត្ថិភាព។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">ផ្អែមធម្មជាតិ សុខភាពពីព្រៃ។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — ទិញឥឡូវ</a>
+        </div>
+      </article>
+
+      <!-- Product 8 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">សាច់ & ប្រូតេអ៊ីន</span>
+          <span class="deal-tag">Organic Certified</span>
+        </div>
+        <h3 class="headline">សាច់គោស្រស់ពីវាលស្មៅ</h3>
+        <p class="blurb">សាច់គោសរីរាង្គប្រចាំខេត្ត ចិញ្ចឹមដោយធម្មជាតិលើវាលស្មៅស្រស់។ គ្មានអ័រម៉ូន គ្មានថ្នាំបង្កើនលូតលាស់ សាច់ទន់ និងមានរសជាតិដើម។ Certified organic និង Quality you can taste ជាមួយ Convenience you deserve ដឹកជញ្ជូនក្នុងថ្ងៃតែមួយ។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> ចិញ្ចឹមដោយធម្មជាតិ សាច់ស្អាត គ្មានសារធាតុគីមី។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូនក្នុងប្រអប់ត្រជាក់ រក្សាភាពស្រស់ 24 ម៉ោង។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រកសិករ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">ប្រូតេអ៊ីនស្អាត សម្រាប់គ្រួសារសុខភាពល្អ។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ</a>
+        </div>
+      </article>
+
+      <!-- Product 9 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">ផ្សិត & បន្លែពិសេស</span>
+          <span class="deal-tag">Highland Grown</span>
+        </div>
+        <h3 class="headline">ផ្សិតស្រស់ពីតំបន់ត្រជាក់</h3>
+        <p class="blurb">ផ្សិតចម្រុះពីតំបន់ត្រជាក់រួមមាន ផ្សិតស្វាយ ផ្សិតកន្ត្រៃ និងផ្សិតអោយ ដាំដុះនៅតំបន់ខ្ពង់រាប។ គ្មានថ្នាំពុល ផ្តល់ជាតិស៊ីលីកា និងប្រូតេអ៊ីនចិញ្ចឹម។ Farm-fresh និង Quality you can taste ជាមួយ Same-Day Delivery សម្រាប់ Convenience you deserve។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> ដាំក្នុងបរិស្ថានត្រជាក់ គ្មានសារធាតុគីមី រសជាតិធម្មជាតិ។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូនថ្ងៃតែមួយ រក្សាភាពស្រស់ក្នុងប្រអប់ត្រជាក់។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">រសជាតិដី ពីតំបន់ត្រជាក់។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — ទិញឥឡូវ</a>
+        </div>
+      </article>
+
+      <!-- Product 10 -->
+      <article class="product-card">
+        <div class="card-header">
+          <span class="product-tag">ផ្លែក្រូច & វីតាមីន C</span>
+          <span class="deal-tag">Seasonal Box</span>
+        </div>
+        <h3 class="headline">ក្លិនឈ្ងុយពីចម្ការតូច</h3>
+        <p class="blurb">ផ្លែក្រូចឆ្មារម៉ៃយ៉ា ប្រមូលពីចម្ការតូចៗនៅតំបន់កំពង់ចាម។ ផ្អែមជូរធម្មជាតិ ផ្ទុកវីតាមីន C ខ្ពស់ សម្រាប់ពង្រឹងភាពស៊ាំ។ Farm-fresh និង Certified organic ដែលផ្តល់ Quality you can taste និង Convenience you deserve ជាមួយដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ។</p>
+        <div class="trust-points">
+          <div class="trust-title">Key Trust Points</div>
+          <ul class="trust-list">
+            <li><span class="trust-pillar">Quality:</span> ប្រមូលដោយដៃ គ្មានថ្នាំសម្លាប់សត្វល្អិត វីតាមីន C ខ្ពស់។</li>
+            <li><span class="trust-pillar">Convenience:</span> ដឹកជញ្ជូន Same-Day ទូទាំងប្រទេស ឥតគិតថ្លៃលើ >$20។</li>
+            <li><span class="trust-pillar">Trust:</span> គាំទ្រកសិដ្ឋាន Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។</li>
+          </ul>
+        </div>
+        <div class="cta-section">
+          <p class="cta-text">ភាពស៊ាំខ្លាំង ចាប់ផ្តើមពីផ្លែក្រូចធម្មជាតិ។</p>
+          <a href="#" class="cta-btn">Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ</a>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">🌿 Nourish</div>
+      <p class="footer-text">Nourish your home ជាមួយ Earth's finest។ វេទិកាដឹកជញ្ជូនម្ហូបស្រស់ និងសរីរាង្គដែលមានគុណភាពខ្ពស់ ផ្គត់ផ្គង់ដល់ 24 ខេត្ត/រាជធានីនៅកម្ពុជា។ Quality you can taste, Convenience you deserve។</p>
+      <div class="footer-links">
+        <span>អំពីយើង</span>
+        <span>គោលការណ៍ឯកជនភាព</span>
+        <span>លក្ខខណ្ឌប្រើប្រាស់</span>
+        <span>ទំនាក់ទំនង</span>
+        <span>ក្លាយជាដៃគូកសិដ្ឋាន</span>
+      </div>
+      <p class="copyright">© 2026 Nourish Grocery Delivery. រក្សាសិទ្ធិគ្រប់យ៉ាង។ ដឹកជញ្ជូនដល់ 24 ខេត្ត/រាជធានី។</p>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+  <script>
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 600) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    });
+
+    // Smooth reveal animation for cards on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.product-card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s, box-shadow 0.4s ease`;
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>
+

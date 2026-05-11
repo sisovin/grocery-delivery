@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nourish | ផ្ទាំងគ្រប់គ្រងអតិថិជន</title>
+  <!-- Fonts -->
+  <link href="https://cdn.fontsource.org/css/@fontsource/nunito-sans/400/500/600/700.css" rel="stylesheet">
+  <link href="https://cdn.fontsource.org/css/@fontsource/noto-sans-khmer/400/500/600/700.css" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --brand-green: #1B5E20;
+      --brand-light: #E8F5E9;
+      --brand-accent: #FF8F00;
+    }
+    body {
+      font-family: 'Noto Sans Khmer', 'Nunito Sans', sans-serif;
+      background-color: #F8FAF8;
+      color: #1A202C;
+    }
+    .brand-text { color: var(--brand-green); }
+    .brand-bg { background-color: var(--brand-green); }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 10px; }
+
+    /* Card Hover */
+    .product-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+
+    /* Animations */
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .cart-drawer { animation: slideInRight 0.3s ease-out; }
+    
+    /* Mobile Menu */
+    .mobile-menu { transform: translateY(-100%); transition: transform 0.3s ease; }
+    .mobile-menu.open { transform: translateY(0); }
+  </style>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#1B5E20',
+              main: '#4CAF50',
+              light: '#E8F5E9',
+              accent: '#FF8F00'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+  <!-- Sidebar (Desktop) -->
+  <aside class="hidden md:flex flex-col w-64 bg-white border-r border-gray-100 z-20">
+    <div class="p-6 flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center text-white">
+        <i class="fa-solid fa-leaf"></i>
+      </div>
+      <span class="text-xl font-bold text-brand-dark">Nourish</span>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-2 mt-4">
+      <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-light text-brand-dark font-semibold transition">
+        <i class="fa-solid fa-store w-5"></i> ហាង (Shop)
+      </a>
+      <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-box-open w-5"></i> ការបញ្ជាទិញ (Orders)
+      </a>
+      <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-heart w-5"></i> ចំណូលចិត្ត
+      </a>
+      <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-50 transition">
+        <i class="fa-solid fa-truck w-5"></i> ដឹកជញ្ជូន
+      </a>
+    </nav>
+
+    <div class="p-6 border-t border-gray-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+           <img src="https://ui-avatars.com/api/?name=Sokea&background=random" alt="User" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <p class="font-semibold text-sm">Sokea Meas</p>
+          <p class="text-xs text-gray-500">សមាជិក Premium</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+    
+    <!-- Top Header -->
+    <header class="bg-white border-b border-gray-100 p-4 flex justify-between items-center z-10">
+      <div class="flex items-center gap-4">
+        <button id="mobileMenuBtn" class="md:hidden text-gray-600 text-xl">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold text-gray-800 hidden sm:block">សួស្តី, Sokea! 👋</h1>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <!-- Location Selector -->
+        <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500 bg-gray-50 px-3 py-2 rounded-lg cursor-pointer">
+          <i class="fa-solid fa-location-dot text-brand-main"></i>
+          <span>ភ្នំពេញ, ចំការមន</span>
+          <i class="fa-solid fa-chevron-down text-xs"></i>
+        </div>
+
+        <!-- Search -->
+        <div class="hidden md:flex items-center bg-gray-50 rounded-lg px-3 py-2 w-64">
+          <i class="fa-solid fa-search text-gray-400 mr-2"></i>
+          <input type="text" placeholder="ស្វែងរកផលិតផល..." class="bg-transparent outline-none text-sm w-full">
+        </div>
+
+        <!-- Cart -->
+        <button id="cartBtn" class="relative p-2 text-gray-600 hover:text-brand-dark transition">
+          <i class="fa-solid fa-basket-shopping text-xl"></i>
+          <span id="cartCount" class="absolute top-0 right-0 bg-brand-accent text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Content -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 pb-24" id="mainScroll">
+      
+      <!-- Promo Banner -->
+      <div class="bg-gradient-to-r from-brand-dark to-brand-main rounded-2xl p-6 mb-8 text-white flex flex-col md:flex-row items-center justify-between shadow-lg relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-10 rounded-full transform translate-x-10 -translate-y-10"></div>
+        <div class="z-10">
+          <h2 class="text-2xl font-bold mb-2">ដឹកជញ្ជូនឥតគិតថ្លៃ 🚚</h2>
+          <p class="opacity-90 mb-4">សម្រាប់ការបញ្ជាទិញលើស $20 ទូទាំង 24 ខេត្ត/រាជធានី។</p>
+          <div class="w-full bg-black/20 h-1.5 rounded-full mb-1 max-w-xs">
+            <div id="progressBar" class="bg-brand-accent h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <p class="text-xs opacity-80" id="progressText">បន្ថែម $20.00 ទៀតដើម្បីដឹកជញ្ជូនឥតគិតថ្លៃ</p>
+        </div>
+        <div class="z-10 mt-4 md:mt-0">
+           <span class="bg-white/20 px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm cursor-pointer hover:bg-white/30 transition">
+             ស្វែងមើលប្រូម៉ូសិន <i class="fa-solid fa-arrow-right ml-1"></i>
+           </span>
+        </div>
+      </div>
+
+      <!-- Section Title -->
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-gray-800">ផលិតផលពេញនិយម (Sample Outputs)</h3>
+        <a href="#" class="text-sm text-brand-main font-semibold hover:underline">មើលទាំងអស់</a>
+      </div>
+
+      <!-- Product Grid -->
+      <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Content injected via JS -->
+      </div>
+
+      <div class="mt-12 p-6 bg-white rounded-xl border border-gray-100 text-center">
+        <p class="text-gray-500 text-sm">© 2026 Nourish Grocery Delivery | ផ្គត់ផ្គង់ដល់ 24 ខេត្ត/រាជធានី</p>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Cart Sidebar (Right Drawer) -->
+  <div id="cartDrawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col cart-drawer">
+    <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+      <h2 class="font-bold text-lg flex items-center gap-2">
+        <i class="fa-solid fa-basket-shopping text-brand-main"></i> កន្ត្រករបស់អ្នក
+      </h2>
+      <button id="closeCart" class="text-gray-400 hover:text-red-500 text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-4">
+      <div class="flex flex-col items-center justify-center h-full text-gray-400">
+        <i class="fa-solid fa-cart-shopping text-4xl mb-3 opacity-30"></i>
+        <p>កន្ត្រករបស់អ្នកនៅទំនេរ</p>
+      </div>
+    </div>
+
+    <div class="p-5 border-t border-gray-100 bg-gray-50">
+      <div class="flex justify-between mb-2 text-sm">
+        <span class="text-gray-500">សរុបរង</span>
+        <span id="subTotal" class="font-semibold">$0.00</span>
+      </div>
+      <div class="flex justify-between mb-4 text-sm">
+        <span class="text-gray-500">ការដឹកជញ្ជូន</span>
+        <span id="deliveryFee" class="text-brand-accent font-semibold">$2.00</span>
+      </div>
+      <div class="flex justify-between mb-6 text-lg font-bold text-gray-800">
+        <span>សរុប</span>
+        <span id="grandTotal">$0.00</span>
+      </div>
+      <button class="w-full py-3 bg-brand-dark text-white rounded-xl font-bold hover:bg-opacity-90 transition shadow-lg shadow-brand-dark/20 flex justify-center items-center gap-2">
+        បន្តការទូទាត់ <i class="fa-solid fa-chevron-right text-xs"></i>
+      </button>
+      <p class="text-center text-xs text-gray-400 mt-3"><i class="fa-solid fa-lock mr-1"></i> ការទូទាត់មានសុវត្ថិភាព 100%</p>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div id="overlay" class="fixed inset-0 bg-black/30 z-40 hidden transition-opacity"></div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around items-center py-3 z-30 shadow-lg">
+    <a href="#" class="flex flex-col items-center text-brand-dark text-xs font-medium gap-1">
+      <i class="fa-solid fa-store text-lg"></i> ហាង
+    </a>
+    <a href="#" class="flex flex-col items-center text-gray-400 text-xs gap-1">
+      <i class="fa-solid fa-box-open text-lg"></i> ការបញ្ជាទិញ
+    </a>
+    <a href="#" class="flex flex-col items-center text-gray-400 text-xs gap-1">
+      <i class="fa-solid fa-heart text-lg"></i> ចំណូលចិត្ត
+    </a>
+    <a href="#" class="flex flex-col items-center text-gray-400 text-xs gap-1">
+      <i class="fa-solid fa-user text-lg"></i> គណនី
+    </a>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 right-0 h-64 bg-white z-50 p-6 shadow-xl md:hidden flex flex-col gap-4">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold">ម៉ឺនុយ</h3>
+      <button id="closeMenu" class="text-2xl text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <a href="#" class="text-lg font-semibold text-gray-700">ហាង</a>
+    <a href="#" class="text-lg font-semibold text-gray-700">ការបញ្ជាទិញ</a>
+    <a href="#" class="text-lg font-semibold text-gray-700">ដឹកជញ្ជូន</a>
+    <a href="#" class="text-lg font-semibold text-gray-700">ទំនាក់ទំនង</a>
+  </div>
+
+  <script>
+    // --- Data Source (10 Products based on Prompt Engineering Framework) ---
+    const products = [
+      {
+        id: 1,
+        name: "ប្រអប់ប៉េងប៉ោះ Heirloom",
+        origin: "Johnson Family Farm",
+        category: "បន្លែ",
+        price: 4.50,
+        deal: "Subscribe & Save 15%",
+        image: "fa-basket-shopping",
+        headline: "រសជាតិរដូវក្តៅគ្រប់ថ្ងៃ",
+        blurb: "ប្រអប់ប៉េងប៉ោះ Heirloom នាំមកជូនអ្នកនូវរសជាតិផ្អែមធម្មជាតិដូចរដូវក្តៅពិតៗ។ កាប់ដោយដៃ និងស្រស់ពីកសិដ្ឋាន (Farm-fresh) ទាំងអស់គ្នា។ Certified Organic ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ។",
+        trust: ["Organic", "Same-Day", "Secure Payment"],
+        color: "bg-red-50",
+        iconColor: "text-red-500"
+      },
+      {
+        id: 2,
+        name: "កញ្ចប់អាវ៉ូកាដូសរីរាង្គ",
+        origin: "ភ្នំដំរី",
+        category: "ផ្លែឈើ",
+        price: 6.00,
+        deal: "បញ្ចុះតម្លៃ 20%",
+        image: "fa-apple-whole",
+        headline: "ក្រៀមក្រណាត់ព្រឹកពីកម្ពុជា",
+        blurb: "កញ្ចប់អាវ៉ូកាដូសរីរាង្គប្រមូលព្រឹកនេះ ពីចម្ការតូចៗនៅតំបន់ភ្នំដំរី។ ផ្ទុកទៅដោយសារធាតុប្រឆាំងអុកស៊ីតកម្ម និងជាតិខ្លាញ់ល្អសម្រាប់សុខភាព។ Farm-fresh 100% ដែលផ្តល់ Quality you can taste។",
+        trust: ["Certified", "Fresh", "Healthy"],
+        color: "bg-green-50",
+        iconColor: "text-green-600"
+      },
+      {
+        id: 3,
+        name: "គ្រឿងផ្សំខ្មែរសរីរាង្គ",
+        origin: "កំពត",
+        category: "គ្រឿងផ្សំ",
+        price: 3.50,
+        deal: "Free Delivery $20+",
+        image: "fa-pepper-hot",
+        headline: "ក្លិនឈ្ងុយមកពីដីម្តាយ",
+        blurb: "កញ្ចប់គ្រឿងផ្សំខ្មែររួមមាន ខ្ទឹមស ខ្ញី ស្លឹកគ្រៃ និងអំបិលសមុទ្រធម្មជាតិ។ ប្រមូលពីកសិដ្ឋានតាមតំបន់នីមួយៗ ដើម្បីផ្តល់រសជាតិសុទ្ធនៃម្ហូបខ្មែរពិតៗ។ Seasonal harvest ដែលផ្តល់ Quality you can taste។",
+        trust: ["Local", "Natural", "Fast Delivery"],
+        color: "bg-yellow-50",
+        iconColor: "text-orange-500"
+      },
+      {
+        id: 4,
+        name: "ស្វាយរដូវកាលសុវណ្ណ",
+        origin: "តាកែវ",
+        category: "ផ្លែឈើ",
+        price: 5.20,
+        deal: "Seasonal Special",
+        image: "fa-lemon",
+        headline: "ផ្អែមពេញពែង រដូវកាលនេះ",
+        blurb: "ស្វាយរដូវកាលសុវណ្ណ ជម្រើសដំបូងពីចម្ការតាកែវ។ ផ្អែមធម្មជាតិ ទន់ និងមានក្លិនឈ្ងុយ។ ប្រមូលដោយដៃនៅពេលទុំច្បាស់ ដើម្បីធានាថារសជាតិល្អបំផុតនៅពេលដល់ដៃអ្នក។ Farm-fresh និង Certified organic។",
+        trust: ["Hand-picked", "Organic", "Tasty"],
+        color: "bg-orange-50",
+        iconColor: "text-orange-600"
+      },
+      {
+        id: 5,
+        name: "អង្ករក្រអូបមន្ទីរី",
+        origin: "ត្បូងឃ្មុំ",
+        category: "ធញ្ញជាតិ",
+        price: 4.00,
+        deal: "Subscribe & Save 10%",
+        image: "fa-wheat-awn",
+        headline: "ក្លិនឈ្ងុយពីវាលភ្លៀង",
+        blurb: "ស្រូវអង្ករក្រអូបមន្ទីរី ដាំដុះលើដីប្រៃសាគរតំបន់ខ្ពង់រាប។ ផ្ទុកទៅដោយសារធាតុចិញ្ចឹម និងក្លិនឈ្ងុយធម្មជាតិ។ កែច្នៃដោយបច្ចេកទេសប្រពៃណី ដើម្បីរក្សាគុណភាពដើម។ Certified organic។",
+        trust: ["Premium", "Local", "Aromatic"],
+        color: "bg-stone-100",
+        iconColor: "text-stone-600"
+      },
+      {
+        id: 6,
+        name: "បន្លែបៃតងកាត់ថ្មី",
+        origin: "បាត់ដំបង",
+        category: "បន្លែ",
+        price: 2.80,
+        deal: "Farm-Fresh Daily",
+        image: "fa-carrot",
+        headline: "ស្រស់ៗពីចម្ការព្រឹកនេះ",
+        blurb: "បន្លែបៃតងកាត់ថ្មីរួមមាន ស្ពៃ ត្រឡាច និងស្ពៃខ្មែរ។ ប្រមូលពីចម្ការសរីរាង្គនៅតំបន់បាត់ដំបង។ គ្មានសារធាតុគីមី គ្មានថ្នាំដាំ រក្សាភាពស្រស់ដោយប្រព័ន្ធត្រជាក់។ Quality you can taste។",
+        trust: ["Fresh Cut", "No Pesticides", "Local"],
+        color: "bg-green-50",
+        iconColor: "text-green-500"
+      },
+      {
+        id: 7,
+        name: "ទឹកឃុំធម្មជាតិព្រៃ",
+        origin: "ភ្នំក្រវាញ",
+        category: "ផលិតផលព្រៃ",
+        price: 8.50,
+        deal: "Wild Harvested",
+        image: "fa-jar",
+        headline: "ផ្អែមពីព្រៃភ្នំក្រវាញ",
+        blurb: "ទឹកឃុំធម្មជាតិព្រៃភ្នំក្រវាញ ប្រមូលដោយដៃពីសំបុកឃ្មុំព្រៃ។ ផ្អែមធម្មជាតិ មិនលាយជាតិស្ករ ផ្ទុកអង់ទីអុកស៊ីតកម្មខ្ពស់។ គាំទ្រអ្នកថែរក្សាព្រៃ និងជីវិតសត្វឃ្មុំ។ Farm-fresh។",
+        trust: ["Wild", "Pure", "Eco-Friendly"],
+        color: "bg-amber-50",
+        iconColor: "text-amber-600"
+      },
+      {
+        id: 8,
+        name: "សាច់គោសរីរាង្គ",
+        origin: "វាលស្មៅ",
+        category: "សាច់",
+        price: 12.00,
+        deal: "Organic Certified",
+        image: "fa-cow",
+        headline: "សាច់គោស្រស់ពីវាលស្មៅ",
+        blurb: "សាច់គោសរីរាង្គប្រចាំខេត្ត ចិញ្ចឹមដោយធម្មជាតិលើវាលស្មៅស្រស់។ គ្មានអ័រម៉ូន គ្មានថ្នាំបង្កើនលូតលាស់ សាច់ទន់ និងមានរសជាតិដើម។ Certified organic និង Quality you can taste។",
+        trust: ["Grass-fed", "No Hormones", "Fresh"],
+        color: "bg-red-50",
+        iconColor: "text-red-700"
+      },
+      {
+        id: 9,
+        name: "ផ្សិតចម្រុះត្រជាក់",
+        origin: "ខ្ពង់រាប",
+        category: "ផ្សិត",
+        price: 3.80,
+        deal: "Highland Grown",
+        image: "fa-seedling",
+        headline: "ផ្សិតស្រស់ពីតំបន់ត្រជាក់",
+        blurb: "ផ្សិតចម្រុះពីតំបន់ត្រជាក់រួមមាន ផ្សិតស្វាយ ផ្សិតកន្ត្រៃ។ ដាំដុះនៅតំបន់ខ្ពង់រាប។ គ្មានថ្នាំពុល ផ្តល់ជាតិស៊ីលីកា និងប្រូតេអ៊ីនចិញ្ចឹម។ Farm-fresh និង Quality you can taste។",
+        trust: ["Highland", "Medicinal", "Clean"],
+        color: "bg-gray-100",
+        iconColor: "text-gray-600"
+      },
+      {
+        id: 10,
+        name: "ផ្លែក្រូចឆ្មារម៉ៃយ៉ា",
+        origin: "កំពង់ចាម",
+        category: "ផ្លែឈើ",
+        price: 2.50,
+        deal: "Seasonal Box",
+        image: "fa-circle-dot",
+        headline: "ក្លិនឈ្ងុយពីចម្ការតូច",
+        blurb: "ផ្លែក្រូចឆ្មារម៉ៃយ៉ា ប្រមូលពីចម្ការតូចៗនៅតំបន់កំពង់ចាម។ ផ្អែមជូរធម្មជាតិ ផ្ទុកវីតាមីន C ខ្ពស់ សម្រាប់ពង្រឹងភាពស៊ាំ។ Farm-fresh និង Certified organic ដែលផ្តល់ Quality you can taste។",
+        trust: ["Vitamin C", "Immunity", "Organic"],
+        color: "bg-yellow-50",
+        iconColor: "text-yellow-600"
+      }
+    ];
+
+    // --- Logic ---
+
+    // 1. Render Products
+    const productGrid = document.getElementById('productGrid');
+
+    function renderProducts() {
+      productGrid.innerHTML = products.map(p => `
+        <article class="product-card bg-white rounded-2xl overflow-hidden border border-gray-100 flex flex-col h-full">
+          <div class="${p.color} h-36 flex items-center justify-center relative">
+            <i class="fa-solid ${p.image} text-5xl ${p.iconColor}"></i>
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-2 py-1 rounded-md shadow-sm text-brand-dark">
+              ${p.deal}
+            </span>
+          </div>
+          
+          <div class="p-4 flex flex-col flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="font-bold text-gray-800 leading-tight text-lg">${p.name}</h3>
+            </div>
+            
+            <p class="text-xs text-gray-400 mb-2"><i class="fa-solid fa-location-dot mr-1"></i> ${p.origin} | ${p.category}</p>
+            
+            <!-- Headline -->
+            <div class="mb-3 bg-green-50 p-2 rounded-lg border border-green-100">
+              <p class="text-xs text-green-800 font-semibold italic">"${p.headline}"</p>
+            </div>
+
+            <!-- Blurb -->
+            <p class="text-xs text-gray-500 leading-relaxed mb-3 line-clamp-3">
+              ${p.blurb}
+            </p>
+
+            <!-- Trust Points -->
+            <div class="mt-auto flex flex-wrap gap-2 mb-4">
+              ${p.trust.map(t => `<span class="text-[10px] font-medium bg-gray-50 text-gray-500 px-2 py-1 rounded border border-gray-100">${t}</span>`).join('')}
+            </div>
+
+            <!-- CTA -->
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-lg font-bold text-brand-dark">$${p.price.toFixed(2)}</span>
+              <button onclick="addToCart(${p.id})" class="bg-brand-dark text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-opacity-90 transition active:scale-95 flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> បន្ថែម
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // 2. Cart Logic
+    let cart = [];
+    
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      cart.push(product);
+      updateCartUI();
+      
+      // Animation feedback
+      const btn = event.currentTarget;
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> រួចរាល់`;
+      btn.classList.replace('bg-brand-dark', 'bg-green-600');
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.replace('bg-green-600', 'bg-brand-dark');
+      }, 1000);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const cartCount = document.getElementById('cartCount');
+      const cartItems = document.getElementById('cartItems');
+      const subTotalEl = document.getElementById('subTotal');
+      const deliveryFeeEl = document.getElementById('deliveryFee');
+      const grandTotalEl = document.getElementById('grandTotal');
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+
+      // Update badge
+      if (cart.length > 0) {
+        cartCount.innerText = cart.length;
+        cartCount.classList.remove('hidden');
+      } else {
+        cartCount.classList.add('hidden');
+      }
+
+      // Calculate totals
+      const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
+      const deliveryFee = subTotal >= 20 ? 0 : 2.00;
+      const grandTotal = subTotal + deliveryFee;
+
+      // Update text
+      subTotalEl.innerText = `$${subTotal.toFixed(2)}`;
+      deliveryFeeEl.innerText = deliveryFee === 0 ? 'ឥតគិតថ្លៃ' : '$2.00';
+      deliveryFeeEl.className = deliveryFee === 0 ? 'text-green-600 font-bold' : 'text-brand-accent font-semibold';
+      grandTotalEl.innerText = `$${grandTotal.toFixed(2)}`;
+
+      // Progress Bar
+      let progress = (subTotal / 20) * 100;
+      if (progress > 100) progress = 100;
+      progressBar.style.width = `${progress}%`;
+      
+      if (subTotal >= 20) {
+        progressBar.classList.remove('bg-brand-accent');
+        progressBar.classList.add('bg-green-500');
+        progressText.innerText = "អបអរសាទរ! អ្នកទទួលបានការដឹកជញ្ជូនឥតគិតថ្លៃ 🎉";
+        progressText.className = "text-xs text-green-600 font-bold";
+      } else {
+        progressBar.classList.add('bg-brand-accent');
+        progressBar.classList.remove('bg-green-500');
+        progressText.innerText = `បន្ថែម $${(20 - subTotal).toFixed(2)} ទៀតដើម្បីដឹកជញ្ជូនឥតគិតថ្លៃ`;
+        progressText.className = "text-xs opacity-80";
+      }
+
+      // Render Items
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div class="flex flex-col items-center justify-center h-full text-gray-400">
+            <i class="fa-solid fa-cart-shopping text-4xl mb-3 opacity-30"></i>
+            <p>កន្ត្រករបស់អ្នកនៅទំនេរ</p>
+          </div>`;
+      } else {
+        cartItems.innerHTML = cart.map((item, index) => `
+          <div class="flex items-center gap-3 bg-white p-2 rounded-lg border border-gray-100 shadow-sm">
+            <div class="w-12 h-12 ${item.color} rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid ${item.image} ${item.iconColor}"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 class="text-sm font-bold text-gray-800 truncate">${item.name}</h4>
+              <p class="text-xs text-brand-dark font-semibold">$${item.price.toFixed(2)}</p>
+            </div>
+            <button onclick="removeFromCart(${index})" class="text-gray-300 hover:text-red-400 p-1">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 3. UI Interactions
+    const cartBtn = document.getElementById('cartBtn');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const closeCart = document.getElementById('closeCart');
+    const overlay = document.getElementById('overlay');
+    
+    // Mobile Menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeMenu = document.getElementById('closeMenu');
+
+    function toggleCart() {
+      const isOpen = !cartDrawer.classList.contains('translate-x-full');
+      if (isOpen) {
+        cartDrawer.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+      } else {
+        cartDrawer.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+      }
+    }
+
+    cartBtn.addEventListener('click', toggleCart);
+    closeCart.addEventListener('click', toggleCart);
+    overlay.addEventListener('click', () => {
+      cartDrawer.classList.add('translate-x-full');
+      mobileMenu.classList.remove('open');
+      overlay.classList.add('hidden');
+    });
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+      overlay.classList.remove('hidden');
+    });
+
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      overlay.classList.add('hidden');
+    });
+
+    // Init
+    renderProducts();
+  </script>
+</body>
+</html>
+

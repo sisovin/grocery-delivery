@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nourish Admin | Prompt Engineering Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-body: #F5F7F9;
+      --bg-sidebar: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-hover: #F0F4F8;
+      --primary: #1B5E20;
+      --primary-light: #E8F5E9;
+      --secondary: #4CAF50;
+      --text-dark: #1A202C;
+      --text-medium: #4A5568;
+      --text-light: #718096;
+      --border: #E2E8F0;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+      --font-family: 'Noto Sans Khmer', system-ui, -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-body);
+      color: var(--text-dark);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+      transition: transform 0.3s ease;
+      z-index: 20;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+      padding: 0 0.5rem;
+    }
+    .logo i { color: var(--secondary); }
+
+    .nav-links { list-style: none; flex: 1; }
+    .nav-links li { margin-bottom: 0.5rem; }
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius);
+      color: var(--text-medium);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .nav-links i { width: 20px; text-align: center; }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+    .user-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: bold;
+    }
+    .user-info { font-size: 0.9rem; }
+    .user-info strong { display: block; color: var(--text-dark); }
+    .user-info span { color: var(--text-light); font-size: 0.8rem; }
+
+    /* Main Content */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h2 { font-size: 1.3rem; color: var(--text-dark); }
+    .search-box {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--bg-body);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      width: 300px;
+    }
+    .search-box input {
+      border: none; background: transparent; outline: none; flex: 1; font-family: var(--font-family);
+      color: var(--text-dark);
+    }
+    .header-actions { display: flex; gap: 1rem; align-items: center; }
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-body);
+      color: var(--text-medium);
+      cursor: pointer; transition: 0.2s;
+      border: none;
+    }
+    .icon-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+    .mobile-menu-btn { display: none; }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1.5rem;
+    }
+
+    /* Product List Panel */
+    .panel {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .panel-header {
+      padding: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .panel-body { flex: 1; overflow-y: auto; }
+
+    .product-item {
+      padding: 1rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .product-item:hover, .product-item.active {
+      background: var(--bg-hover);
+      border-left: 4px solid var(--primary);
+      padding-left: calc(1.2rem - 4px);
+    }
+    .prod-thumb {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+    .prod-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .prod-info p { font-size: 0.8rem; color: var(--text-light); }
+    .prod-badge {
+      margin-left: auto;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      background: #E2E8F0;
+      color: var(--text-medium);
+      font-weight: 600;
+    }
+    .badge-deal { background: #FFF3E0; color: #E65100; }
+
+    /* Preview Panel */
+    .preview-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .preview-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .preview-card h3 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .copy-btn {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.8rem;
+      background: var(--bg-body);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-medium);
+      transition: 0.2s;
+    }
+    .copy-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .copy-btn.copied { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+    .output-box {
+      background: #F8FAFC;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--primary-light);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+    .output-box ul { margin-left: 1rem; margin-top: 0.5rem; }
+    .output-box li { margin-bottom: 0.4rem; }
+    .trust-pillar { font-weight: 600; color: var(--primary); }
+
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; color: var(--text-light); text-align: center; padding: 2rem;
+    }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+
+    @media (max-width: 1024px) {
+      .content { grid-template-columns: 1fr; }
+      .sidebar { position: absolute; height: 100%; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-md); }
+      .mobile-menu-btn { display: block; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-dark); }
+      .search-box { display: none; }
+      .overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.3); z-index: 15; display: none;
+      }
+      .overlay.active { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="logo"><i class="fa-solid fa-leaf"></i> Nourish Admin</div>
+    <ul class="nav-links">
+      <li><a href="#"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+      <li><a href="#" class="active"><i class="fa-solid fa-wand-magic-sparkles"></i> Prompt Generator</a></li>
+      <li><a href="#"><i class="fa-solid fa-box-open"></i> Products</a></li>
+      <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Deliveries</a></li>
+      <li><a href="#"><i class="fa-solid fa-users"></i> Customers</a></li>
+      <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+    </ul>
+    <div class="user-profile">
+      <div class="user-avatar">NA</div>
+      <div class="user-info">
+        <strong>Nourish Admin</strong>
+        <span>Content Team</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="header">
+      <button class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+      <h2>Product Content Outputs (10 Samples)</h2>
+      <div class="search-box">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="Search products, tags...">
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+        <button class="icon-btn"><i class="fa-regular fa-circle-question"></i></button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="panel">
+        <div class="panel-header">
+          <span>Product Catalog</span>
+          <span style="font-size:0.8rem; color:var(--text-light)">10 items</span>
+        </div>
+        <div class="panel-body" id="productList">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <div class="preview-area" id="previewArea">
+        <div class="empty-state">
+          <i class="fa-solid fa-file-pen"></i>
+          <h3>Select a product</h3>
+          <p>Choose a product from the left to view and copy generated content based on the Nourish Prompt Framework.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Data: 10 Products based on framework
+    const products = [
+      {
+        id: 1, name: "ប្រអប់ប៉េងប៉ោះ Heirloom", origin: "Johnson Family Farm", deal: "Subscribe & Save 15%", icon: "fa-basket-shopping",
+        headline: "រសជាតិរដូវក្តៅគ្រប់ថ្ងៃ",
+        blurb: "ប្រអប់ប៉េងប៉ោះ Heirloom នាំមកជូនអ្នកនូវរសជាតិផ្អែមធម្មជាតិដូចរដូវក្តៅពិតៗ។ កាប់ដោយដៃនៅ Johnson Family Farm និងស្រស់ពីកសិដ្ឋាន (Farm-fresh) ទាំងអស់គ្នា។ ជា Certified Organic ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ ដើម្បីផ្តល់ Convenience you deserve។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> ដាំក្នុងដីរស់ ដោយគ្មានសារធាតុគីមី—រសជាតិផ្អែមជាងគេ។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ត្រូវការប៉េងប៉ោះសម្រាប់ម្ហូបយប់នេះ? យើងដឹកដល់ផ្ទះក្នុងរយៈពេលម៉ោង។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រកសិដ្ឋានក្នុងតំបន់ និងទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "បន្ថែមពណ៌ និងរសជាតិដល់ចានរបស់អ្នក។ Nourish your home ជាមួយ Earth's finest ហើយសន្សំ 15% ពេល Subscribe។"
+      },
+      {
+        id: 2, name: "កញ្ចប់អាវ៉ូកាដូសរីរាង្គ", origin: "ភ្នំដំរី", deal: "បញ្ចុះតម្លៃ 20%", icon: "fa-apple-whole",
+        headline: "ក្រៀមក្រណាត់ព្រឹកពីកម្ពុជា",
+        blurb: "កញ្ចប់អាវ៉ូកាដូសរីរាង្គប្រមូលព្រឹកនេះ ពីចម្ការតូចៗនៅតំបន់ភ្នំដំរី។ ផ្ទុកទៅដោយសារធាតុប្រឆាំងអុកស៊ីតកម្ម និងជាតិខ្លាញ់ល្អសម្រាប់សុខភាព។ Farm-fresh 100% ដែលផ្តល់ Quality you can taste និងដឹកជញ្ជូន Same-Day ដើម្បីភាពងាយស្រួលដែលអ្នកគួរទទួលបាន (Convenience you deserve)។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> Certified organic គ្មានថ្នាំសម្លាប់សត្វល្អិត—សុវត្ថិភាពសម្រាប់ក្មេង។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនក្នុងរយៈពេល 2-4 ម៉ោង ទូទាំងរាជធានី និងខេត្ត។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រកសិករ Local farms ផ្ទាល់ ដោយគ្មានអ្នកកណ្តាល។`
+        ],
+        cta: "ផ្លែឈើសរីរាង្គពិតប្រាកដ សម្រាប់គ្រួសារដែលយកចិត្តទុកដាក់លើសុខភាព។ Nourish your home — Earth's finest បញ្ចុះ 20%"
+      },
+      {
+        id: 3, name: "គ្រឿងផ្សំខ្មែរសរីរាង្គ", origin: "តាមតំបន់", deal: "Free Delivery $20+", icon: "fa-pepper-hot",
+        headline: "ក្លិនឈ្ងុយមកពីដីម្តាយ",
+        blurb: "កញ្ចប់គ្រឿងផ្សំខ្មែរសរីរាង្គរួមមាន គ្រឿងផ្សំស្រស់ៗ ដូចជា ខ្ទឹមស ខ្ញី ស្លឹកគ្រៃ និងអំបិលសមុទ្រធម្មជាតិ។ ប្រមូលពីកសិដ្ឋានតាមតំបន់នីមួយៗ ដើម្បីផ្តល់រសជាតិសុទ្ធនៃម្ហូបខ្មែរពិតៗ។ Seasonal harvest ដែលផ្តល់ Quality you can taste ជាមួយ Same-Day Delivery។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> គ្មានសារធាតុគីមី រសជាតិដើមពីធម្មជាតិ 100%។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> រៀបចំម្ហូបបានលឿនជាងមុន ដោយគ្រឿងផ្សំរួចរាល់ស្រាប់។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> ផ្ទៀងផ្ទាត់ប្រភពច្បាស់លាស់ពីកសិដ្ឋានក្នុងស្រុក។`
+        ],
+        cta: "សម្រស់នៃម្ហូបខ្មែរ ចាប់ផ្តើមពីគ្រឿងផ្សំល្អ។ Nourish your home ជាមួយ Earth's finest — Free Delivery"
+      },
+      {
+        id: 4, name: "ផ្លែស្វាយរដូវកាលសុវណ្ណ", origin: "កំពត/តាកែវ", deal: "Seasonal Special", icon: "fa-lemon",
+        headline: "ផ្អែមពេញពែង រដូវកាលនេះ",
+        blurb: "ផ្លែស្វាយរដូវកាលសុវណ្ណ ជម្រើសដំបូងពីចម្ការកំពត និងតាកែវ។ ផ្អែមធម្មជាតិ ទន់ និងមានក្លិនឈ្ងុយ។ ប្រមូលដោយដៃនៅពេលទុំច្បាស់ ដើម្បីធានាថារសជាតិល្អបំផុតនៅពេលដល់ដៃអ្នក។ Farm-fresh និង Certified organic ដែលផ្តល់ Convenience you deserve។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> ប្រមូលតែពេលទុំពេញលេញ រសជាតិផ្អែមធម្មជាតិខ្ពស់។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនថ្ងៃតែមួយ ទូទាំង 24 ខេត្ត/រាជធានី។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> ផ្ទៀងផ្ទាត់ដោយក្រុមអ្នកជំនាញ Local farms។`
+        ],
+        cta: "រដូវកាលស្វាយបានមកដល់ហើយ! Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ"
+      },
+      {
+        id: 5, name: "ស្រូវអង្ករក្រអូបមន្ទីរី", origin: "ខ្ពង់រាប", deal: "Subscribe & Save 10%", icon: "fa-wheat-awn",
+        headline: "ក្លិនឈ្ងុយពីវាលភ្លៀង",
+        blurb: "ស្រូវអង្ករក្រអូបមន្ទីរី ដាំដុះលើដីប្រៃសាគរតំបន់ខ្ពង់រាប។ ផ្ទុកទៅដោយសារធាតុចិញ្ចឹម និងក្លិនឈ្ងុយធម្មជាតិ។ កែច្នៃដោយបច្ចេកទេសប្រពៃណី ដើម្បីរក្សាគុណភាពដើម។ Certified organic និង Quality you can taste ជាមួយ Same-Day Delivery។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> មិនលាយឡំ មិនប្រើប្រេងក្រអូប ក្លិនធម្មជាតិពិត។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនឥតគិតថ្លៃលើការបញ្ជាទិញ >$20។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> វិញ្ញាបនបត្រសរីរាង្គច្បាស់លាស់ គាំទ្រកសិករខ្មែរ។`
+        ],
+        cta: "បាយក្រអូប ជាស្នាមញញឹមគ្រួសារ។ Nourish your home ជាមួយ Earth's finest — Subscribe & Save"
+      },
+      {
+        id: 6, name: "បន្លែបៃតងកាត់ថ្មី", origin: "បាត់ដំបង", deal: "Farm-Fresh Daily", icon: "fa-carrot",
+        headline: "ស្រស់ៗពីចម្ការព្រឹកនេះ",
+        blurb: "បន្លែបៃតងកាត់ថ្មីរួមមាន ស្ពៃ បៃតង ត្រឡាច និងស្ពៃខ្មែរ ប្រមូលពីចម្ការសរីរាង្គនៅតំបន់បាត់ដំបង។ គ្មានសារធាតុគីមី គ្មានថ្នាំដាំ រក្សាភាពស្រស់ដោយប្រព័ន្ធត្រជាក់។ Quality you can taste និង Convenience you deserve ជាមួយ Same-Day Delivery។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> កាត់ថ្មីរៀងរាល់ព្រឹក រក្សាសារធាតុចិញ្ចឹម 95%+។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនក្នុងថ្ងៃតែមួយ មិនចាំបាច់ទៅផ្សារ។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "បន្លែស្រស់ សុខភាពល្អ គ្រួសារសប្បាយ។ Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ"
+      },
+      {
+        id: 7, name: "ទឹកឃុំធម្មជាតិព្រៃ", origin: "ភ្នំក្រវាញ", deal: "Wild Harvested", icon: "fa-jar",
+        headline: "ផ្អែមពីព្រៃភ្នំក្រវាញ",
+        blurb: "ទឹកឃុំធម្មជាតិព្រៃភ្នំក្រវាញ ប្រមូលដោយដៃពីសំបុកឃ្មុំព្រៃ។ ផ្អែមធម្មជាតិ មិនលាយជាតិស្ករ ផ្ទុកអង់ទីអុកស៊ីតកម្មខ្ពស់។ គាំទ្រអ្នកថែរក្សាព្រៃ និងជីវិតសត្វឃ្មុំ។ Farm-fresh និង Quality you can taste ជាមួយដឹកជញ្ជូនរហ័សក្នុងថ្ងៃតែមួយ។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> 100% ធម្មជាតិ មិនកែច្នៃ មិនលាយសារធាតុគីមី។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូន Same-Day ទូទាំង 24 ខេត្ត/រាជធានី។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រសហគមន៍ Local farms និងការទូទាត់មានសុវត្ថិភាព។`
+        ],
+        cta: "ផ្អែមធម្មជាតិ សុខភាពពីព្រៃ។ Nourish your home ជាមួយ Earth's finest — ទិញឥឡូវ"
+      },
+      {
+        id: 8, name: "សាច់គោសរីរាង្គ", origin: "វាលស្មៅ", deal: "Organic Certified", icon: "fa-cow",
+        headline: "សាច់គោស្រស់ពីវាលស្មៅ",
+        blurb: "សាច់គោសរីរាង្គប្រចាំខេត្ត ចិញ្ចឹមដោយធម្មជាតិលើវាលស្មៅស្រស់។ គ្មានអ័រម៉ូន គ្មានថ្នាំបង្កើនលូតលាស់ សាច់ទន់ និងមានរសជាតិដើម។ Certified organic និង Quality you can taste ជាមួយ Convenience you deserve ដឹកជញ្ជូនក្នុងថ្ងៃតែមួយ។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> ចិញ្ចឹមដោយធម្មជាតិ សាច់ស្អាត គ្មានសារធាតុគីមី។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនក្នុងប្រអប់ត្រជាក់ រក្សាភាពស្រស់ 24 ម៉ោង។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រកសិករ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "ប្រូតេអ៊ីនស្អាត សម្រាប់គ្រួសារសុខភាពល្អ។ Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ"
+      },
+      {
+        id: 9, name: "ផ្សិតចម្រុះត្រជាក់", origin: "ខ្ពង់រាប", deal: "Highland Grown", icon: "fa-seedling",
+        headline: "ផ្សិតស្រស់ពីតំបន់ត្រជាក់",
+        blurb: "ផ្សិតចម្រុះពីតំបន់ត្រជាក់រួមមាន ផ្សិតស្វាយ ផ្សិតកន្ត្រៃ និងផ្សិតអោយ ដាំដុះនៅតំបន់ខ្ពង់រាប។ គ្មានថ្នាំពុល ផ្តល់ជាតិស៊ីលីកា និងប្រូតេអ៊ីនចិញ្ចឹម។ Farm-fresh និង Quality you can taste ជាមួយ Same-Day Delivery សម្រាប់ Convenience you deserve។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> ដាំក្នុងបរិស្ថានត្រជាក់ គ្មានសារធាតុគីមី រសជាតិធម្មជាតិ។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូនថ្ងៃតែមួយ រក្សាភាពស្រស់ក្នុងប្រអប់ត្រជាក់។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រ Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "រសជាតិដី ពីតំបន់ត្រជាក់។ Nourish your home ជាមួយ Earth's finest — ទិញឥឡូវ"
+      },
+      {
+        id: 10, name: "ផ្លែក្រូចឆ្មារម៉ៃយ៉ា", origin: "កំពង់ចាម", deal: "Seasonal Box", icon: "fa-circle-dot",
+        headline: "ក្លិនឈ្ងុយពីចម្ការតូច",
+        blurb: "ផ្លែក្រូចឆ្មារម៉ៃយ៉ា ប្រមូលពីចម្ការតូចៗនៅតំបន់កំពង់ចាម។ ផ្អែមជូរធម្មជាតិ ផ្ទុកវីតាមីន C ខ្ពស់ សម្រាប់ពង្រឹងភាពស៊ាំ។ Farm-fresh និង Certified organic ដែលផ្តល់ Quality you can taste និង Convenience you deserve ជាមួយដឹកជញ្ជូនរហ័ស។",
+        trust: [
+          `<span class="trust-pillar">គុណភាពសរីរាង្គ:</span> ប្រមូលដោយដៃ គ្មានថ្នាំសម្លាប់សត្វល្អិត វីតាមីន C ខ្ពស់។`,
+          `<span class="trust-pillar">ដឹកជញ្ជូនរហ័ស:</span> ដឹកជញ្ជូន Same-Day ទូទាំងប្រទេស ឥតគិតថ្លៃលើ >$20។`,
+          `<span class="trust-pillar">ទុកចិត្តបាន:</span> គាំទ្រកសិដ្ឋាន Local farms និងការទូទាត់មានសុវត្ថិភាព 100%។`
+        ],
+        cta: "ភាពស៊ាំខ្លាំង ចាប់ផ្តើមពីផ្លែក្រូចធម្មជាតិ។ Nourish your home ជាមួយ Earth's finest — បញ្ជាទិញឥឡូវ"
+      }
+    ];
+
+    // Render Product List
+    const listEl = document.getElementById('productList');
+    products.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'product-item';
+      div.dataset.id = p.id;
+      div.innerHTML = `
+        <div class="prod-thumb"><i class="fa-solid ${p.icon}"></i></div>
+        <div class="prod-info">
+          <h4>${p.name}</h4>
+          <p>${p.origin} | ${p.deal}</p>
+        </div>
+        <span class="prod-badge badge-deal">${p.deal.split(' ')[0]}</span>
+      `;
+      div.addEventListener('click', () => selectProduct(p, div));
+      listEl.appendChild(div);
+    });
+
+    // Select & Preview
+    function selectProduct(p, el) {
+      document.querySelectorAll('.product-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+
+      const preview = document.getElementById('previewArea');
+      preview.innerHTML = `
+        <div class="preview-card">
+          <h3>Headline <button class="copy-btn" onclick="copyText(this, '${escapeHtml(p.headline)}')">Copy</button></h3>
+          <div class="output-box" id="txt-headline">${p.headline}</div>
+        </div>
+        <div class="preview-card">
+          <h3>Descriptive Blurb <button class="copy-btn" onclick="copyText(this, '${escapeHtml(p.blurb)}')">Copy</button></h3>
+          <div class="output-box" id="txt-blurb">${p.blurb}</div>
+        </div>
+        <div class="preview-card">
+          <h3>Key Trust Points <button class="copy-btn" onclick="copyTrust(this, ${p.id})">Copy All</button></h3>
+          <div class="output-box">
+            <ul id="txt-trust">
+              <li>${p.trust[0]}</li>
+              <li>${p.trust[1]}</li>
+              <li>${p.trust[2]}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="preview-card">
+          <h3>Call-to-Action (CTA) <button class="copy-btn" onclick="copyText(this, '${escapeHtml(p.cta)}')">Copy</button></h3>
+          <div class="output-box" id="txt-cta" style="color:var(--primary); font-weight:600;">${p.cta}</div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) { return str.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+    window.copyText = function(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    };
+
+    window.copyTrust = function(btn, id) {
+      const p = products.find(x => x.id === id);
+      const plain = p.trust.map(t => t.replace(/<[^>]*>/g, '')).join('\n');
+      navigator.clipboard.writeText(plain).then(() => {
+        btn.textContent = 'Copied!'; btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy All'; btn.classList.remove('copied'); }, 2000);
+      });
+    };
+
+    // Mobile Sidebar Toggle
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
+

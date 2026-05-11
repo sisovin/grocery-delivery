@@ -1,0 +1,13 @@
+{
+  "name": "nourish/grocery-delivery",
+  "description": "Native PHP MVC grocery delivery app with PDO MySQL and Tailwind CSS",
+  "type": "project",
+  "require": {
+    "php": ">=8.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\\\": "app/"
+    }
+  }
+}
